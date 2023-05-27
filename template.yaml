@@ -9,8 +9,8 @@ Parameters:
 
 Globals:
   Function:
-    Timeout: 100
-    MemorySize: 5120
+    Timeout: 29
+    MemorySize: 1024 
   Api:
     BinaryMediaTypes:
       - image/png
@@ -29,6 +29,7 @@ Resources:
       Architectures:
         # - arm64
         - x86_64
+      ReservedConcurrentExecutions: 1
       Events:
         Inference:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
