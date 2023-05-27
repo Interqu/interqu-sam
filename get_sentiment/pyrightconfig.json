@@ -1,0 +1,13 @@
+{
+  "include": [],
+  "exclude": ["packages", "deployment.zip", "venv", ".git", ".aws-sam"],
+  "venvPath": "/Users/lefan/Programming/interqu/",
+  "venv": "venv",
+  "pythonVersion": "3.9.16",
+  "pythonPlatform": "Darwin",
+  "executionEnvironments": [
+    {
+      "root": "./",
+    }
+  ]
+}
