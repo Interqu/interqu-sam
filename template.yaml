@@ -22,6 +22,7 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: !Ref Stage
+        
   AudioSentimentInferenceFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -47,6 +48,29 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./get_sentiment
       DockerTag: python3.9-v1
+        
+  ExpressionInferenceFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      PackageType: Image
+      Architectures:
+        - x86_64
+      ReservedConcurrentExecutions: 1
+      Events:
+        Inference:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            RestApiId: !Ref InterquAPI
+            Path: /get_expression
+            Method: get
+            Auth:
+              ApiKeyRequired: true
+      Policies: AmazonS3ReadOnlyAccess
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./get_expression
+      DockerTag: python3.10-v1
+
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
