@@ -245,7 +245,7 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps(
             {
-                "predictions": predictions,
+                "predictions": [EMOTIONS[i] for i in predictions],
             }
         ),
     }
