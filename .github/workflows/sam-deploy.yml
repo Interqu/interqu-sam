@@ -2,17 +2,41 @@ on:
   push:
     branches:
       - main
+
+# This allows a subsequently queued workflow run to interrupt previous runs
+concurrency:
+  group: '${{ github.workflow }} @ ${{ github.event.pull_request.head.label || github.head_ref || github.ref }}'
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+    
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v3
-      - uses: aws-actions/setup-sam@v2
-      - uses: aws-actions/configure-aws-credentials@v1
+      - name: Checkout
+        uses: actions/checkout@v3
+          
+      - name: Setup python3
+        uses: actions/setup-python@v3
+        
+      - name: Setup aws sam cli
+        uses: aws-actions/setup-sam@v2
+        
+      - name: Configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
-      - run: sam build --use-container
-      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
+
+            
+      - name: Validate sam template
+        run: sam validate
+        
+      - name: Build container
+        run: sam build --use-container --parallel
+        
+      - name: Deploy to cloudformation stack
+        run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset
