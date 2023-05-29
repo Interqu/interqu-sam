@@ -5,16 +5,18 @@ import json
 import numpy as np
 
 import torch.nn as nn
-import torch.nn.functional as F
+import torch.nn.functional
 
 from PIL import Image
 from io import BytesIO
 
 import cv2
-
 from collections import defaultdict
 
+import boto3
 
+
+s3_client = boto3.client("s3")
 
 transform = torchvision.transforms.Compose([
     torchvision.transforms.TenCrop(44),
@@ -77,7 +79,23 @@ def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
 def lambda_handler(event, context):
-    cap = cv2.VideoCapture('/opt/videoplayback.mp4')
+    video = event["queryStringParameters"]["file_name"]
+
+
+    if not video:
+        return {
+            "statusCode": 400,
+            "body": json.dumps(
+                {
+                    "error": "no file name was provided",
+                }
+            ),
+        }
+
+    s3_client.download_file("interqu-video", video, "/tmp/video.mp4")
+
+    
+    cap = cv2.VideoCapture(video)
     success, image = cap.read()
     count = 0
     out = defaultdict(lambda:0, {})
@@ -105,18 +123,19 @@ def lambda_handler(event, context):
                 img = Image.fromarray(img)
                 inputs = transform(img)
 
-                net.eval()
+                with torch.no_grad():
+                    net.eval()
 
-                ncrops, c, h, w = np.shape(inputs)
+                    ncrops, c, h, w = np.shape(inputs)
 
-                inputs = inputs.view(-1, c, h, w)
-                inputs = inputs.to(device)
-                outputs = net(inputs)
+                    inputs = inputs.view(-1, c, h, w)
+                    inputs = inputs.to(device)
+                    outputs = net(inputs)
 
-                outputs_avg = outputs.view(ncrops, -1).mean(0)  # avg over crops
-                score = F.softmax(outputs_avg, dim = -1)
+                    outputs_avg = outputs.view(ncrops, -1).mean(0)  # avg over crops
+                    score = torch.nn.functional.softmax(outputs_avg, dim = -1)
 
-                _, predicted = torch.max(outputs_avg.data, 0)
+                    _, predicted = torch.max(outputs_avg.data, 0)
 
                 out[classes[int(predicted.cpu().numpy())]] +=1
                 timeline.append(classes[int(predicted.cpu().numpy())])
@@ -135,14 +154,6 @@ def lambda_handler(event, context):
 
 
     return_obj = {"Score" : total_score, "Timeline": timeline}
-
-
-    # image_bytes = event['body'].encode('utf-8')
-    # image = Image.open(BytesIO(base64.b64decode(image_bytes))).convert(mode='L')
-    # image = image.resize((28, 28))
-
-    # probabilities = model.forward(image_transforms(np.array(image)).reshape(-1, 1, 28, 28))
-    # label = torch.argmax(probabilities).item()
 
     return {
         'statusCode': 200,
