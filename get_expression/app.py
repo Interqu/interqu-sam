@@ -5,13 +5,14 @@ import json
 import numpy as np
 
 import torch.nn as nn
-import torch.nn.functional
+import torch.nn.functional as F
 
 from PIL import Image
 from io import BytesIO
 
 import cv2
 from collections import defaultdict
+import os
 
 import boto3
 
@@ -55,11 +56,11 @@ class VGG(nn.Module):
 
 classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
-face_cascade = cv2.CascadeClassifier('/opt/ml/haarcascade_frontalface_default.xml')
 
 
 
 model_file = '/opt/ml/pretrain.t7'
+face_model = '/opt/ml/haarcascade_frontalface_default.xml'
 net = VGG()
 if torch.cuda.is_available():
     checkpoint = torch.load(model_file)
@@ -71,7 +72,7 @@ else:
     device = torch.device("cpu")
 
 net.to(device)
-net.eval()
+
 
 
 
@@ -79,8 +80,9 @@ def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
 def lambda_handler(event, context):
-    video = event["queryStringParameters"]["file_name"]
+    face_cascade = cv2.CascadeClassifier(face_model)
 
+    video = event["queryStringParameters"]["file_name"]
 
     if not video:
         return {
@@ -92,10 +94,11 @@ def lambda_handler(event, context):
             ),
         }
 
-    s3_client.download_file("interqu-video", video, "/tmp/video.mp4")
 
+    s3_client.download_file("interqu-video", video, "/tmp/video.mp4")
     
-    cap = cv2.VideoCapture(video)
+    
+    cap = cv2.VideoCapture("/tmp/video.mp4")
     success, image = cap.read()
     count = 0
     out = defaultdict(lambda:0, {})
@@ -109,7 +112,7 @@ def lambda_handler(event, context):
             gray = rgb2gray(raw)
             gray = np.array(gray, dtype = "uint8")
             faces = face_cascade.detectMultiScale(gray, 1.1, 10)
-        
+            # faces = 0
             # Face detected, we use this frame
             if len(faces) > 0:
                 faces = faces[0] # We want to take only 1 face
@@ -123,7 +126,7 @@ def lambda_handler(event, context):
                 img = Image.fromarray(img)
                 inputs = transform(img)
 
-                with torch.no_grad():
+                with torch.no_grad():   
                     net.eval()
 
                     ncrops, c, h, w = np.shape(inputs)
@@ -133,7 +136,7 @@ def lambda_handler(event, context):
                     outputs = net(inputs)
 
                     outputs_avg = outputs.view(ncrops, -1).mean(0)  # avg over crops
-                    score = torch.nn.functional.softmax(outputs_avg, dim = -1)
+                    score = F.softmax(outputs_avg, dim = -1)
 
                     _, predicted = torch.max(outputs_avg.data, 0)
 
