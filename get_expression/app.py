@@ -62,6 +62,7 @@ classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 model_file = '/opt/ml/pretrain.t7'
 face_model = '/opt/ml/haarcascade_frontalface_default.xml'
 net = VGG()
+
 if torch.cuda.is_available():
     checkpoint = torch.load(model_file)
     net.load_state_dict(checkpoint['net'])
@@ -145,8 +146,6 @@ def lambda_handler(event, context):
                 count += 1
         else: 
             count += 1
-
-
 
     # Scoring
     scores = {'Angry': 0, 'Disgust':0.1, 'Fear' : 0.2, 'Happy': 1, 'Sad':0.3, 'Surprise':0.5, 'Neutral':0.5}

@@ -7,4 +7,4 @@ deployment/
 layer*/
 samples/
 .aws-sam/
-
+.env
