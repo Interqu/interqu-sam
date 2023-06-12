@@ -1,16 +1,15 @@
-AWSTemplateFormatVersion: '2010-09-09'
+AWSTemplateFormatVersion: "2010-09-09"
 Transform: AWS::Serverless-2016-10-31
 
 Parameters:
   Stage:
     Type: String
     Default: dev
-  
 
 Globals:
   Function:
     Timeout: 29
-    MemorySize: 1024 
+    MemorySize: 10000
   Api:
     BinaryMediaTypes:
       - image/png
@@ -22,7 +21,7 @@ Resources:
     Type: AWS::Serverless::Api
     Properties:
       StageName: !Ref Stage
-        
+
   AudioSentimentInferenceFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -48,7 +47,7 @@ Resources:
       Dockerfile: Dockerfile
       DockerContext: ./get_sentiment
       DockerTag: python3.9-v1
-        
+
   ExpressionInferenceFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -71,6 +70,20 @@ Resources:
       DockerContext: ./get_expression
       DockerTag: python3.10-v1
 
+  VideoProcessFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: process_video/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Events:
+        ProcessVideo:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /process_video
+            Method: get
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
