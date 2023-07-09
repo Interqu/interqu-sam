@@ -83,7 +83,8 @@
       ]
     },
     "queryStringParameters": {
-      "file_name": "videoplayback.mp4"
+      "file_name": "videoplayback.mp4",
+      "audio_file": "Transcriber_test"
     },
     "stageVariables": {
       "stageVariableName": "stageVariableValue"

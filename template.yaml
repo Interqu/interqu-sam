@@ -8,7 +8,7 @@ Parameters:
 
 Globals:
   Function:
-    Timeout: 29
+    Timeout: 180
     MemorySize: 10000
   Api:
     BinaryMediaTypes:
@@ -91,6 +91,7 @@ Resources:
   VideoPreProcessFunction:
     Type: AWS::Serverless::Function 
     Properties:
+      Timeout: 180
       CodeUri: preprocess_video/
       Handler: app.lambda_handler
       Runtime: python3.9
@@ -102,6 +103,24 @@ Resources:
           Properties:
             RestApiId: !Ref InterquAPI
             Path: /preprocess
+            Method: get
+            Auth:
+              ApiKeyRequired: true
+
+  AudioTranscriptionFunction:
+    Type: AWS::Serverless::Function 
+    Properties:
+      CodeUri: get_transcript/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Events:
+        getTranscript:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            RestApiId: !Ref InterquAPI
+            Path: /transcript
             Method: get
             Auth:
               ApiKeyRequired: true
