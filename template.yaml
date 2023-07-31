@@ -96,6 +96,8 @@ Resources:
       Runtime: python3.9
       Architectures:
         - x86_64
+      Layers:
+        - !Ref FfmpegLayer
       
   AudioTranscriptionFunction:
     Type: AWS::Serverless::Function 
@@ -137,11 +139,11 @@ Resources:
   FfmpegLayer:
     Type: AWS::Serverless::LayerVersion
     Properties:
-      ContentUri: layers/ffmpeg
+      ContentUri: layers/ffmpeg/
       CompatibleRuntimes:
         - python3.9
-    Metadata:
-      BuildMethod: python3.9
+    # Metadata:
+    #   BuildMethod: python3.9
 
 
 Outputs:

@@ -4,7 +4,6 @@ environments/
 *.zip
 output*.txt
 deployment/
-layer*/
 samples/
 .aws-sam/
 .env
