@@ -62,29 +62,6 @@
                   "BackoffRate": 2
                 }
               ],
-              "Next": "Publish Data to Mongo"
-            },
-            "Publish Data to Mongo": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::lambda:invoke",
-              "OutputPath": "$.Payload",
-              "Parameters": {
-                "Payload.$": "$",
-                "FunctionName": "publish_mongo"
-              },
-              "Retry": [
-                {
-                  "ErrorEquals": [
-                    "Lambda.ServiceException",
-                    "Lambda.AWSLambdaException",
-                    "Lambda.SdkClientException",
-                    "Lambda.TooManyRequestsException"
-                  ],
-                  "IntervalSeconds": 2,
-                  "MaxAttempts": 6,
-                  "BackoffRate": 2
-                }
-              ],
               "Next": "Choice (1)"
             },
             "Choice (1)": {
@@ -93,7 +70,7 @@
                 {
                   "Variable": "$.lambdaOutput.result",
                   "StringEquals": "success",
-                  "Next": "Wait 3 sec"
+                  "Next": "Publish Success"
                 },
                 {
                   "Not": {
@@ -103,12 +80,6 @@
                   "Next": "Publish Failure (1)"
                 }
               ]
-            },
-            "Wait 3 sec": {
-              "Comment": "A Wait state delays the state machine from continuing for a specified time.",
-              "Type": "Wait",
-              "Seconds": 3,
-              "Next": "Publish Success"
             },
             "Publish Success": {
               "Type": "Task",
@@ -154,29 +125,6 @@
                   "BackoffRate": 2
                 }
               ],
-              "Next": "Publish Data to Mongo (1)"
-            },
-            "Publish Data to Mongo (1)": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::lambda:invoke",
-              "OutputPath": "$.Payload",
-              "Parameters": {
-                "Payload.$": "$",
-                "FunctionName": "publish_mongo"
-              },
-              "Retry": [
-                {
-                  "ErrorEquals": [
-                    "Lambda.ServiceException",
-                    "Lambda.AWSLambdaException",
-                    "Lambda.SdkClientException",
-                    "Lambda.TooManyRequestsException"
-                  ],
-                  "IntervalSeconds": 2,
-                  "MaxAttempts": 6,
-                  "BackoffRate": 2
-                }
-              ],
               "Next": "Choice"
             },
             "Choice": {
@@ -188,9 +136,13 @@
                     "StringEquals": "success"
                   },
                   "Next": "Publish Failure"
+                },
+                {
+                  "Variable": "$.lambdaOutput.result",
+                  "StringEquals": "success",
+                  "Next": "Publish Success (1)"
                 }
-              ],
-              "Default": "Wait 3 sec (1)"
+              ]
             },
             "Publish Failure": {
               "Type": "Task",
@@ -200,12 +152,6 @@
                 "TopicArn": "failure topic"
               },
               "End": true
-            },
-            "Wait 3 sec (1)": {
-              "Comment": "A Wait state delays the state machine from continuing for a specified time.",
-              "Type": "Wait",
-              "Seconds": 3,
-              "Next": "Publish Success (1)"
             },
             "Publish Success (1)": {
               "Type": "Task",
@@ -219,6 +165,71 @@
           }
         }
       ],
+      "Next": "Pass (3)"
+    },
+    "Pass (3)": {
+      "Comment": "A Pass state passes its input to its output, without performing work. Pass states are useful when constructing and debugging state machines.",
+      "Type": "Pass",
+      "Next": "GPT Analysis"
+    },
+    "GPT Analysis": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "OutputPath": "$.Payload",
+      "Parameters": {
+        "Payload.$": "$",
+        "FunctionName": "gpt_analysis"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "Publish Data to Mongo"
+    },
+    "Publish Data to Mongo": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::lambda:invoke",
+      "OutputPath": "$.Payload",
+      "Parameters": {
+        "Payload.$": "$",
+        "FunctionName": "publish_mongo"
+      },
+      "Retry": [
+        {
+          "ErrorEquals": [
+            "Lambda.ServiceException",
+            "Lambda.AWSLambdaException",
+            "Lambda.SdkClientException",
+            "Lambda.TooManyRequestsException"
+          ],
+          "IntervalSeconds": 2,
+          "MaxAttempts": 6,
+          "BackoffRate": 2
+        }
+      ],
+      "Next": "Wait"
+    },
+    "Wait": {
+      "Type": "Wait",
+      "Seconds": 2,
+      "Next": "Publish Finished"
+    },
+    "Publish Finished": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "Message.$": "$",
+        "TopicArn": "finished_topic"
+      },
       "Next": "Pass (2)"
     },
     "Pass (2)": {
