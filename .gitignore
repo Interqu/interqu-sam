@@ -8,3 +8,5 @@ layer*/
 samples/
 .aws-sam/
 .env
+
+pyrightconfig.json
