@@ -133,6 +133,16 @@ Resources:
             Auth:
               ApiKeyRequired: true
 
+  # Python layers
+  FfmpegLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: layers/ffmpeg
+      CompatibleRuntimes:
+        - python3.9
+    Metadata:
+      BuildMethod: python3.9
+
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
