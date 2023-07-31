@@ -1,44 +1,25 @@
 import json
 import boto3
-
-from decouple import config
-
-client = boto3.client("lambda")
 import requests
 
+client = boto3.client("lambda")
 
 def lambda_handler(event, context):
+    event = event['Input']
+    final_json = str()
+    
+    s3 = boto3.resource('s3')
+    bucket = event['bucket'].split(':')[-1]
+    filename = event['key']
+    directory = "/tmp/{}".format(filename)
+    
+    s3.Bucket(bucket).download_file(filename, directory)
+    
+    with open(directory, "r") as jsonfile:
+        final_json = json.load(jsonfile)
+    
+    os.popen("rm -rf /tmp")
+    
+    return final_json
 
-
-    params1 = {"queryStringParameters": {"file_name": "videoplayback.mp4"}}
-    params2 = {"queryStringParameters": {"file_name": "audio1.wav"}}
-
-    res1 = client.invoke(
-        FunctionName = config("EXPRESSIONARN"),
-        InvocationType = "Event",
-        Payload = json.dumps(params1)
-    )
-
-    res2 = client.invoke(
-        FunctionName = config("AUDIOARN"),
-        InvocationType = "Event",
-        Payload = json.dumps(params2)
-    )
-    try:
-        ExpressionRes = json.load(res1["Payload"]) 
-        AudioRes = json.load(res2["Payload"])
-    except:
-        return{
-            "statusCode": 400,
-            "body": json.dumps({
-                "Message": "File not found"
-            })
-        } 
-
-    return {
-        "statusCode": 200,
-        "body": json.dumps({
-            "ExpressionResponse": ExpressionRes,
-            "AudioResponse": AudioRes
-        }),
-    }
+    
