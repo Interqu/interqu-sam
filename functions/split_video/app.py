@@ -14,7 +14,7 @@ def extractAudio(video_file, output_ext="mp3"):
 
     filename, ext = os.path.splitext(video_file)
     clip = VideoFileClip(video_file)
-    print("writing file: " + filename)
+    logging.info("writing file: " + filename)
     clip.audio.write_audiofile(f"{filename}.{output_ext}")
 
     return f"{filename}.{output_ext}"
