@@ -7,6 +7,20 @@ const collectionName = "interview_result_data";
 
 const javaDataClass = "com.interqu.interviews.InterviewVideoData";
 
+export const lambdaHandler = async (event, context) => {
+  const stock_price = event["stock_price"]; // example fetch data from event
+
+  // Mocked result of a stock buying transaction
+
+  let result = {
+    "result" : "success/<anything else>"
+  }
+
+
+  return result;
+
+};
+
 //saves data to mongodb
 async function saveDataToMongoDB(data) {
   const client = await MongoClient.connect(mongoURI);
