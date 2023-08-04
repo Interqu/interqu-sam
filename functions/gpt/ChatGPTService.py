@@ -17,6 +17,10 @@ contentFeedbackPrompt = "You are a program named Interqu that analyzes interview
 visualFeedbackPrompt = "You will act as a professional interview coach, speak in a professional manner, and will ONLY anaylze the facial emotions of an interviewee. In this query, you are provided an array of facial emotions detected by our system every second (i.e each element is the emotion detected within the second). Ensure you refer to the interviewee directly using pronouns like 'you', and ensure the lengths of your response is max of 400 words. Answer with the format: 'In this interview, you've....{what the array shows}...{what emotions should be displayed}...{helpful advice}...'"
 audioFeedbackPrompt = "You will act as a professional interview coach, speak in a professional manner, and will ONLY anaylze the vocal emotions of an interviewee. In this query, you are provided an array of vocal emotions detected by our system every second (i.e each element is the emotion detected within the second). Ensure you refer to the interviewee directly using pronouns like 'you', and ensure the lengths of your response is max of 400 words. Answer with the format: 'In this interview, you've....{what the array shows}...{what emotions should be displayed}...{helpful advice}...'"
 
+def lambda_handler(event, context):
+    # do your thing here
+
+    return "data you want passed to the next function in statemachine flow"
 
 def generateFeedback(position, question, visualEmotions, audioEmotions, content):
     try:
