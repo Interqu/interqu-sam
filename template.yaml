@@ -89,7 +89,7 @@ Resources:
               ApiKeyRequired: true
 
   SplitVideoFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/split_video/
       Handler: app.lambda_handler
@@ -107,7 +107,7 @@ Resources:
       #         ApiKeyRequired: true
 
   AudioTranscriptionFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/get_transcript/
       Handler: app.lambda_handler
@@ -125,7 +125,7 @@ Resources:
               ApiKeyRequired: true
 
   WhisperFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/get_whisper/
       Handler: app.lambda_handler
@@ -143,14 +143,17 @@ Resources:
               ApiKeyRequired: true
 
   GPTAnalysisFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/gpt/
       Handler: ChatGPTService.lambda_handler
       Runtime: python3.9
+      Environment:
+        Variables:
+          OPENAI_API_KEY: ${OPENAI_API_KEY}
       Architectures:
         - x86_64
-      
+
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
