@@ -89,7 +89,7 @@ Resources:
               ApiKeyRequired: true
 
   SplitVideoFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/split_video/
       Handler: app.lambda_handler
@@ -107,7 +107,7 @@ Resources:
       #         ApiKeyRequired: true
 
   AudioTranscriptionFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/get_transcript/
       Handler: app.lambda_handler
@@ -125,7 +125,7 @@ Resources:
               ApiKeyRequired: true
 
   WhisperFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/get_whisper/
       Handler: app.lambda_handler
@@ -143,13 +143,16 @@ Resources:
               ApiKeyRequired: true
 
   PublishMongoFunction:
-    Type: AWS::Serverless::Function 
+    Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/publishDB/
       Handler: MongoService.lambda_handler
       Runtime: nodejs18.x
       Architectures:
         - x86_64
+      Environment:
+        Variables:
+          MONGODB_URL: "{MONGODB_URL_API}"
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
