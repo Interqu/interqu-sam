@@ -135,6 +135,19 @@ Resources:
             Auth:
               ApiKeyRequired: true
 
+
+  PublishMongoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/publishDB/
+      Handler: MongoService.lambda_handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          MONGODB_URL: "{MONGODB_URL_API}"
+
   GPTAnalysisFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -156,6 +169,7 @@ Resources:
         - python3.9
     # Metadata:
     #   BuildMethod: python3.9
+
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
