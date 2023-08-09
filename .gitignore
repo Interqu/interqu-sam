@@ -4,7 +4,9 @@ environments/
 *.zip
 output*.txt
 deployment/
-layer*/
 samples/
 .aws-sam/
 .env
+
+# ignore pywrite config
+pyrightconfig.json
