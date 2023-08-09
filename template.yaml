@@ -96,16 +96,9 @@ Resources:
       Runtime: python3.9
       Architectures:
         - x86_64
-      # Events:
-      #   PreProcessVideo:
-      #     Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-      #     Properties:
-      #       RestApiId: !Ref InterquAPI
-      #       Path: /split
-      #       Method: get
-      #       Auth:
-      #         ApiKeyRequired: true
-
+      Layers:
+        - !Ref FfmpegLayer
+      
   AudioTranscriptionFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -153,6 +146,16 @@ Resources:
           OPENAI_API_KEY: ${OPENAI_API_KEY}
       Architectures:
         - x86_64
+
+  # Python layers
+  FfmpegLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: layers/ffmpeg/
+      CompatibleRuntimes:
+        - python3.9
+    # Metadata:
+    #   BuildMethod: python3.9
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
