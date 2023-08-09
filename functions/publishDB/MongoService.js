@@ -8,6 +8,7 @@ const collectionName = "interview_result_data";
 const javaDataClass = "com.interqu.interviews.InterviewVideoData";
 
 exports.lambda_handler = async (event, context) => {
+  console.info("EVENT\n" + JSON.stringify(event, null, 2))
   return saveInterviewData(
     event["details"],
     event["visualData"],
