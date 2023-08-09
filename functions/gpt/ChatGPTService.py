@@ -1,6 +1,7 @@
 import os
 import openai
 import json
+import logging
 
 # Initilizing openai with a given API_KEY.
 openai.api_key = os.environ.get('OPENAI_API_KEY')
@@ -15,6 +16,7 @@ audioFeedbackPrompt = "You will act as a professional interview coach, speak in 
 
 
 def lambda_handler(event, context):
+    logging.info(f"gpt analysis triggered with event: {event}")
     feedback = generateFeedback(event["questionId"], event["userId"],
                                 event["position"], event["question"], event["visualEmotions"], event["audioEmotions"], event["content"])
     return feedback
