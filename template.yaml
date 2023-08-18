@@ -8,7 +8,7 @@ Parameters:
 
 Globals:
   Function:
-    Timeout: 29
+    Timeout: 180
     MemorySize: 10000
   Api:
     BinaryMediaTypes:
@@ -45,7 +45,7 @@ Resources:
           NUMBA_CACHE_DIR: /tmp/
     Metadata:
       Dockerfile: Dockerfile
-      DockerContext: ./get_sentiment
+      DockerContext: ./functions/get_sentiment
       DockerTag: python3.9-v1
 
   ExpressionInferenceFunction:
@@ -67,13 +67,13 @@ Resources:
       Policies: AmazonS3ReadOnlyAccess
     Metadata:
       Dockerfile: Dockerfile
-      DockerContext: ./get_expression
+      DockerContext: ./functions/get_expression
       DockerTag: python3.10-v1
 
   VideoProcessFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
-      CodeUri: process_video/
+      CodeUri: functions/process_video/
       Handler: app.lambda_handler
       Runtime: python3.9
       Architectures:
@@ -88,23 +88,87 @@ Resources:
             Auth:
               ApiKeyRequired: true
 
-  VideoPreProcessFunction:
-    Type: AWS::Serverless::Function 
+  SplitVideoFunction:
+    Type: AWS::Serverless::Function
     Properties:
-      CodeUri: preprocess_video/
+      CodeUri: functions/split_video/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Layers:
+        - !Ref FfmpegLayer
+      
+  AudioTranscriptionFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/get_transcript/
       Handler: app.lambda_handler
       Runtime: python3.9
       Architectures:
         - x86_64
       Events:
-        PreProcessVideo:
+        getTranscript:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             RestApiId: !Ref InterquAPI
-            Path: /preprocess
+            Path: /transcript
             Method: get
             Auth:
               ApiKeyRequired: true
+
+  WhisperFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/get_whisper/
+      Handler: app.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Events:
+        getTranscript:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            RestApiId: !Ref InterquAPI
+            Path: /whisper
+            Method: get
+            Auth:
+              ApiKeyRequired: true
+
+
+  PublishMongoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/publishDB/
+      Handler: MongoService.lambda_handler
+      Runtime: nodejs18.x
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          MONGODB_URL: "{MONGODB_URL_API}"
+
+  GPTAnalysisFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/gpt/
+      Handler: ChatGPTService.lambda_handler
+      Runtime: python3.9
+      Environment:
+        Variables:
+          OPENAI_API_KEY: ${OPENAI_API_KEY}
+      Architectures:
+        - x86_64
+
+  # Python layers
+  FfmpegLayer:
+    Type: AWS::Serverless::LayerVersion
+    Properties:
+      ContentUri: layers/ffmpeg/
+      CompatibleRuntimes:
+        - python3.9
+    # Metadata:
+    #   BuildMethod: python3.9
 
 
 Outputs:
