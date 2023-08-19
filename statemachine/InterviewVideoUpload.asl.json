@@ -13,7 +13,7 @@
       "OutputPath": "$.Payload",
       "Parameters": {
         "Payload.$": "$",
-        "FunctionName": "split_video"
+        "FunctionName": "${SplitVideoFunctionArn}"
       },
       "Retry": [
         {
@@ -47,7 +47,7 @@
               "OutputPath": "$.Payload",
               "Parameters": {
                 "Payload.$": "$",
-                "FunctionName": "get_expression"
+                "FunctionName": "${GetExpressionFunctionArn}"
               },
               "Retry": [
                 {
@@ -110,7 +110,7 @@
               "OutputPath": "$.Payload",
               "Parameters": {
                 "Payload.$": "$",
-                "FunctionName": "get_sentiment"
+                "FunctionName": "${GetSentimentFunctionArn}"
               },
               "Retry": [
                 {
@@ -178,7 +178,7 @@
       "OutputPath": "$.Payload",
       "Parameters": {
         "Payload.$": "$",
-        "FunctionName": "gpt_analysis"
+        "FunctionName": "${GPTAnalysisFunctionArn}"
       },
       "Retry": [
         {
@@ -201,7 +201,7 @@
       "OutputPath": "$.Payload",
       "Parameters": {
         "Payload.$": "$",
-        "FunctionName": "publish_mongo"
+        "FunctionName": "${PublishMongoFunctionArn}"
       },
       "Retry": [
         {

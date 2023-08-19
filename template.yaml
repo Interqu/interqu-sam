@@ -22,6 +22,28 @@ Resources:
     Properties:
       StageName: !Ref Stage
 
+  VideoUploadStatemachine:
+    Type: AWS::Serverless::StateMachine # More info about State Machine Resource: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/sam-resource-statemachine.html
+    Properties:
+      DefinitionUri: statemachine/InterviewVideoUpload.asl.json
+      DefinitionSubstitutions:
+        SplitVideoFunctionArn: !GetAtt SplitVideoFunction.Arn
+        GetExpressionFunctionArn: !GetAtt ExpressionInferenceFunction.Arn
+        GetSentimentFunctionArn: !GetAtt AudioSentimentInferenceFunction.Arn
+        GPTAnalysisFunctionArn: !GetAtt GPTAnalysisFunction.Arn
+        PublishMongoFunctionArn : !GetAtt PublishMongoFunction.Arn
+      Policies: # Find out more about SAM policy templates: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-templates.html
+        - LambdaInvokePolicy:
+            FunctionName: !Ref SplitVideoFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref ExpressionInferenceFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref AudioSentimentInferenceFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref GPTAnalysisFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref PublishMongoFunction
+
   AudioSentimentInferenceFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
     Properties:
@@ -39,7 +61,7 @@ Resources:
             Method: get
             Auth:
               ApiKeyRequired: true
-      Policies: AmazonS3ReadOnlyAccess
+      Policies: 
       Environment:
         Variables: # Environment variables
           NUMBA_CACHE_DIR: /tmp/
@@ -70,23 +92,23 @@ Resources:
       DockerContext: ./functions/get_expression
       DockerTag: python3.10-v1
 
-  VideoProcessFunction:
-    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
-    Properties:
-      CodeUri: functions/process_video/
-      Handler: app.lambda_handler
-      Runtime: python3.9
-      Architectures:
-        - x86_64
-      Events:
-        ProcessVideo:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            RestApiId: !Ref InterquAPI
-            Path: /process_video
-            Method: get
-            Auth:
-              ApiKeyRequired: true
+  # VideoProcessFunction:
+  #   Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+  #   Properties:
+  #     CodeUri: functions/process_video/
+  #     Handler: app.lambda_handler
+  #     Runtime: python3.9
+  #     Architectures:
+  #       - x86_64
+  #     Events:
+  #       ProcessVideo:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           RestApiId: !Ref InterquAPI
+  #           Path: /process_video
+  #           Method: get
+  #           Auth:
+  #             ApiKeyRequired: true
 
   SplitVideoFunction:
     Type: AWS::Serverless::Function
@@ -98,6 +120,7 @@ Resources:
         - x86_64
       Layers:
         - !Ref FfmpegLayer
+      Policies: AmazonS3FullAccess
       
   AudioTranscriptionFunction:
     Type: AWS::Serverless::Function
@@ -117,23 +140,23 @@ Resources:
             Auth:
               ApiKeyRequired: true
 
-  WhisperFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: functions/get_whisper/
-      Handler: app.lambda_handler
-      Runtime: python3.9
-      Architectures:
-        - x86_64
-      Events:
-        getTranscript:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            RestApiId: !Ref InterquAPI
-            Path: /whisper
-            Method: get
-            Auth:
-              ApiKeyRequired: true
+  # WhisperFunction:
+  #   Type: AWS::Serverless::Function
+  #   Properties:
+  #     CodeUri: functions/get_whisper/
+  #     Handler: app.lambda_handler
+  #     Runtime: python3.9
+  #     Architectures:
+  #       - x86_64
+  #     Events:
+  #       getTranscript:
+  #         Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+  #         Properties:
+  #           RestApiId: !Ref InterquAPI
+  #           Path: /whisper
+  #           Method: get
+  #           Auth:
+  #             ApiKeyRequired: true
 
 
   PublishMongoFunction:
@@ -146,7 +169,7 @@ Resources:
         - x86_64
       Environment:
         Variables:
-          MONGODB_URL: "{MONGODB_URL_API}"
+          MONGODB_URL: '{{resolve:ssm:/interqu/mongodb_url:1}}'
 
   GPTAnalysisFunction:
     Type: AWS::Serverless::Function
@@ -156,7 +179,7 @@ Resources:
       Runtime: python3.9
       Environment:
         Variables:
-          OPENAI_API_KEY: ${OPENAI_API_KEY}
+          OPENAI_API_KEY: '{{resolve:ssm:/interqu/openai_api_key:1}}'
       Architectures:
         - x86_64
 
