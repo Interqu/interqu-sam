@@ -43,12 +43,15 @@ def upload_file(file_name, bucket, object_name=None):
     return True
 
 def lambda_handler(event, context):
-    event = event['Input']
+    print("Event received: ")
+    print(event)
+
+    # event = event['Input']
     final_json = str()
     
     s3 = boto3.resource('s3')
     bucket = event['bucket'].split(':')[-1]
-    filename = event['key']
+    filename = event['filename']
     directory = "/tmp/{}".format(filename)
 
     logging.info("Downloading file: " + filename)
@@ -66,6 +69,15 @@ def lambda_handler(event, context):
         
     os.popen("rm -rf /tmp")
     
-    return final_json
+    return {
+        "statusCode": 200,
+        "video": {
+            "filename": filename[:-4] + ".mp4"
+        },
+        "audio": {
+            "filename": filename[:-4] + ".mp3"
+        },
+    }
+
 
     

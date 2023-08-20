@@ -201,8 +201,11 @@ def split_audio(audio_path):
 
 
 def lambda_handler(event, context):
+    print("Event received: ")
+    print(event)
+
     # determine what audio file to fetch
-    audio_file = event["queryStringParameters"]["file_name"]
+    audio_file = event["audio"]["filename"]
     if not audio_file:
         return {
             "statusCode": 400,
