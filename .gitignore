@@ -8,5 +8,8 @@ samples/
 .aws-sam/
 .env
 
+# local statemachine files
+stepfunctionslocal/
+
 # ignore pywrite config
 pyrightconfig.json
