@@ -50,7 +50,8 @@ def lambda_handler(event, context):
     final_json = str()
     
     s3 = boto3.resource('s3')
-    bucket = event['bucket'].split(':')[-1]
+    # bucket = event['bucket'].split(':')[-1]
+    bucket = event['bucket']
     filename = event['filename']
     directory = "/tmp/{}".format(filename)
 

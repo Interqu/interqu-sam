@@ -113,14 +113,25 @@ Resources:
   SplitVideoFunction:
     Type: AWS::Serverless::Function
     Properties:
-      CodeUri: functions/split_video/
-      Handler: app.lambda_handler
-      Runtime: python3.9
+      PackageType: Image
       Architectures:
         - x86_64
-      Layers:
-        - !Ref FfmpegLayer
+      ReservedConcurrentExecutions: 1
+      Events:
+        Inference:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            RestApiId: !Ref InterquAPI
+            Path: /get_expression
+            Method: get
+            Auth:
+              ApiKeyRequired: true
+
       Policies: AmazonS3FullAccess
+    Metadata:
+      Dockerfile: Dockerfile
+      DockerContext: ./functions/split_video
+      DockerTag: python3.10-v1
       
   AudioTranscriptionFunction:
     Type: AWS::Serverless::Function
