@@ -57,7 +57,7 @@ class VGG(nn.Module):
 classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
 
-
+# s3_client.download_file("interqu-video", "pretrain.t7", "/opt/ml/pretrain.t7")
 
 model_file = '/opt/ml/pretrain.t7'
 face_model = '/opt/ml/haarcascade_frontalface_default.xml'
@@ -81,7 +81,7 @@ def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
 def lambda_handler(event, context):
-    print("Event received: ")
+    print("Event received at get expression function: ")
     print(event)
 
     face_cascade = cv2.CascadeClassifier(face_model)

@@ -52,16 +52,16 @@ Resources:
         # - arm64
         - x86_64
       ReservedConcurrentExecutions: 1
-      Events:
-        Inference:
-          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
-          Properties:
-            RestApiId: !Ref InterquAPI
-            Path: /get_sentiment
-            Method: get
-            Auth:
-              ApiKeyRequired: true
-      Policies: 
+      # Events:
+      #   Inference:
+      #     Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+      #     Properties:
+      #       RestApiId: !Ref InterquAPI
+      #       Path: /get_sentiment
+      #       Method: get
+      #       Auth:
+      #         ApiKeyRequired: true
+      Policies: AmazonS3ReadOnlyAccess
       Environment:
         Variables: # Environment variables
           NUMBA_CACHE_DIR: /tmp/
@@ -122,7 +122,7 @@ Resources:
           Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
           Properties:
             RestApiId: !Ref InterquAPI
-            Path: /get_expression
+            Path: /split_video
             Method: get
             Auth:
               ApiKeyRequired: true
