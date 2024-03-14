@@ -13,7 +13,7 @@
       "OutputPath": "$.Payload",
       "Parameters": {
         "Payload.$": "$",
-        "FunctionName": "${SplitVideoFunctionArn}"
+        "FunctionName": "arn:aws:lambda:us-east-1:537801392411:function:interqu-SplitVideoFunction-WWsqZs0SM7kv:$LATEST"
       },
       "Retry": [
         {
@@ -47,7 +47,7 @@
               "OutputPath": "$.Payload",
               "Parameters": {
                 "Payload.$": "$",
-                "FunctionName": "${GetExpressionFunctionArn}"
+                "FunctionName": "arn:aws:lambda:us-east-1:537801392411:function:interqu-ExpressionInferenceFunction-q9f153k2vL2F:$LATEST"
               },
               "Retry": [
                 {
@@ -70,34 +70,32 @@
                 {
                   "Variable": "$.lambdaOutput.result",
                   "StringEquals": "success",
-                  "Next": "Publish Success"
+                  "Next": "ExpressionOutput"
                 },
                 {
                   "Not": {
                     "Variable": "$.lambdaOutput.result",
                     "StringEquals": "success"
                   },
-                  "Next": "Publish Failure (1)"
+                  "Next": "OnExpressionFail"
                 }
               ]
             },
-            "Publish Success": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::sns:publish",
-              "Parameters": {
-                "Message.$": "$",
-                "TopicArn": "success topic"
-              },
+            "ExpressionOutput": {
+              "Type": "Pass",
               "End": true
             },
-            "Publish Failure (1)": {
+            "OnExpressionFail": {
               "Type": "Task",
               "Resource": "arn:aws:states:::sns:publish",
               "Parameters": {
                 "Message.$": "$",
                 "TopicArn": "Failure topic"
               },
-              "End": true
+              "Next": "Fail"
+            },
+            "Fail": {
+              "Type": "Fail"
             }
           }
         },
@@ -110,7 +108,7 @@
               "OutputPath": "$.Payload",
               "Parameters": {
                 "Payload.$": "$",
-                "FunctionName": "${GetSentimentFunctionArn}"
+                "FunctionName": "arn:aws:lambda:us-east-1:537801392411:function:interqu-AudioSentimentInferenceFunction-K1Ho4wxfDkX3:$LATEST"
               },
               "Retry": [
                 {
@@ -135,31 +133,101 @@
                     "Variable": "$.lambdaOutput.result",
                     "StringEquals": "success"
                   },
-                  "Next": "Publish Failure"
+                  "Next": "OnSentimentFail"
                 },
                 {
                   "Variable": "$.lambdaOutput.result",
                   "StringEquals": "success",
-                  "Next": "Publish Success (1)"
+                  "Next": "SentimentOutput"
                 }
               ]
             },
-            "Publish Failure": {
+            "SentimentOutput": {
+              "Type": "Pass",
+              "End": true
+            },
+            "OnSentimentFail": {
               "Type": "Task",
               "Resource": "arn:aws:states:::sns:publish",
               "Parameters": {
                 "Message.$": "$",
                 "TopicArn": "failure topic"
               },
+              "Next": "Fail (1)"
+            },
+            "Fail (1)": {
+              "Type": "Fail"
+            }
+          }
+        },
+        {
+          "StartAt": "Audio Transcription",
+          "States": {
+            "Audio Transcription": {
+              "Type": "Task",
+              "Resource": "arn:aws:states:::lambda:invoke",
+              "OutputPath": "$.Payload",
+              "Parameters": {
+                "Payload.$": "$",
+                "FunctionName": "arn:aws:lambda:us-east-1:537801392411:function:interqu-AudioTranscriptionFunction-G3FeVb4yTtWc:$LATEST"
+              },
+              "Retry": [
+                {
+                  "ErrorEquals": [
+                    "Lambda.ServiceException",
+                    "Lambda.AWSLambdaException",
+                    "Lambda.SdkClientException",
+                    "Lambda.TooManyRequestsException"
+                  ],
+                  "IntervalSeconds": 1,
+                  "MaxAttempts": 3,
+                  "BackoffRate": 2
+                }
+              ],
+              "Next": "Choice (2)"
+            },
+            "Choice (2)": {
+              "Type": "Choice",
+              "Choices": [
+                {
+                  "Not": {
+                    "Variable": "$.lambdaOutput.result",
+                    "StringEquals": "success"
+                  },
+                  "Next": "Publish Failure (2)"
+                },
+                {
+                  "Not": {
+                    "Variable": "$.lambdaOutput.result",
+                    "StringEquals": "success"
+                  },
+                  "Next": "TranscriptionOutput"
+                }
+              ]
+            },
+            "TranscriptionOutput": {
+              "Type": "Pass",
               "End": true
             },
-            "Publish Success (1)": {
+            "Publish Failure (2)": {
               "Type": "Task",
               "Resource": "arn:aws:states:::sns:publish",
               "Parameters": {
                 "Message.$": "$",
-                "TopicArn": "success topic"
+                "TopicArn": "failure topic"
               },
+              "Next": "Fail (2)"
+            },
+            "Fail (2)": {
+              "Type": "Fail"
+            }
+          }
+        },
+        {
+          "StartAt": "DataPipe",
+          "States": {
+            "DataPipe": {
+              "Type": "Pass",
               "End": true
             }
           }
@@ -178,7 +246,7 @@
       "OutputPath": "$.Payload",
       "Parameters": {
         "Payload.$": "$",
-        "FunctionName": "${GPTAnalysisFunctionArn}"
+        "FunctionName": "arn:aws:lambda:us-east-1:537801392411:function:interqu-GPTAnalysisFunction-8sCc6d3psHOI:$LATEST"
       },
       "Retry": [
         {
@@ -193,7 +261,32 @@
           "BackoffRate": 2
         }
       ],
-      "Next": "Publish Data to Mongo"
+      "Next": "Choice (3)"
+    },
+    "Choice (3)": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Not": {
+            "Variable": "$.lambdaOutput.result",
+            "StringEquals": "success"
+          },
+          "Next": "OnGPTFail"
+        }
+      ],
+      "Default": "Publish Data to Mongo"
+    },
+    "OnGPTFail": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "Message.$": "$",
+        "TopicArn": "failuire topic"
+      },
+      "Next": "Fail (3)"
+    },
+    "Fail (3)": {
+      "Type": "Fail"
     },
     "Publish Data to Mongo": {
       "Type": "Task",
@@ -201,7 +294,7 @@
       "OutputPath": "$.Payload",
       "Parameters": {
         "Payload.$": "$",
-        "FunctionName": "${PublishMongoFunctionArn}"
+        "FunctionName": "arn:aws:lambda:us-east-1:537801392411:function:interqu-PublishMongoFunction-SjK6oC9Ku0wg:$LATEST"
       },
       "Retry": [
         {
@@ -234,7 +327,10 @@
     },
     "Pass (2)": {
       "Type": "Pass",
-      "End": true
+      "Next": "Success"
+    },
+    "Success": {
+      "Type": "Succeed"
     }
   }
 }
