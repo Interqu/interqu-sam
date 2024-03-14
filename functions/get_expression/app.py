@@ -81,7 +81,7 @@ def rgb2gray(rgb):
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
 def lambda_handler(event, context):
-    print("Event received: ")
+    print("Event received at get expression function: ")
     print(event)
 
     face_cascade = cv2.CascadeClassifier(face_model)

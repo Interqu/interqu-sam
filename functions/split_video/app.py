@@ -61,14 +61,12 @@ def lambda_handler(event, context):
 
     # extract audio
     logging.info("Extracting audio")
-    filename = extractAudio(directory)
 
+    uploadfile = extractAudio(directory)
 
     # upload
     logging.info("Uploading audiofile")
-    upload_file(filename, "interqu-audio")
-        
-    os.popen("rm -rf /tmp")
+    upload_file(uploadfile, "interqu-audio")
     
     return {
         "statusCode": 200,
