@@ -3,6 +3,9 @@ import openai
 import json
 import logging
 
+
+
+
 # Initilizing openai with a given API_KEY.
 openai.api_key = os.environ.get('OPENAI_API_KEY')
 
@@ -29,9 +32,9 @@ audio_feedback_prompt = "You will act as a professional interview coach, named I
 # transcript - transcript of the interview. : string
 def lambda_handler(event, context):
     logging.info(f"gpt analysis triggered with event: {event}")
-    feedback = generate_feedback(event["question_id"], event["user_id"],
-                                event["position"], event["question"], event["tips"], event["employers_look_for"], event["avoid_mention"], event["visual_emotions"], event["audio_emotions"], event["visual_score"], event["audio_score"], event["transcript"])
+    feedback = generate_feedback(event["question_id"], event["user_id"], event["position"], event["question"], event["tips"], event["employers_look_for"], event["avoid_mention"], event["visual_emotions"], event["audio_emotions"], event["visual_score"], event["audio_score"], event["transcript"])
     return feedback
+
 
 # Returns obj to be stored in database
 def generate_feedback(question_id, user_id, position, question, tips, employers_look_for, avoid_mention, visual_emotions, audio_emotions, visual_score, audio_score, transcript):
