@@ -204,11 +204,14 @@ Resources:
     # Metadata:
     #   BuildMethod: python3.9
 
-  # aws s3 buckets
+  # aws s3 buckets & configuration
   VideoS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: interqu-video
+      BucketName: interqu-video-test
+      PublicAccessBlockConfiguration:
+        BlockPublicPolicy: false
+        # RestrictPublicBuckets: false
       CorsConfiguration:
         CorsRules:
           - AllowedHeaders:
@@ -224,11 +227,13 @@ Resources:
               - Date
             Id: myCORSRuleId1
             MaxAge: 3600
-  
   AudioS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: interqu-audio
+      BucketName: interqu-audio-test
+      PublicAccessBlockConfiguration:
+        BlockPublicPolicy: false
+        # RestrictPublicBuckets: false
       CorsConfiguration:
         CorsRules:
           - AllowedHeaders:
@@ -244,8 +249,7 @@ Resources:
               - Date
             Id: myCORSRuleId1
             MaxAge: 3600
-  
-  AudioStorageBucketPolicies:
+  AudioStorageBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
       Bucket: !Ref AudioS3Bucket
@@ -266,8 +270,7 @@ Resources:
               StringLike:
                 'aws:Referer':
                   - '*'
-  
-  VideoStorageBucketPolicies:
+  VideoStorageBucketPolicy:
     Type: AWS::S3::BucketPolicy
     Properties:
       Bucket: !Ref VideoS3Bucket
@@ -281,7 +284,7 @@ Resources:
             Resource: !Join
               - ''
               - - 'arn:aws:s3:::'
-                - !Ref AudioS3Bucket
+                - !Ref VideoS3Bucket
                 - /*
             Principal: '*'
             Condition:
@@ -303,11 +306,9 @@ Outputs:
   InferenceFunctionIamRole:
     Description: "Implicit IAM Role created for Inference function"
     Value: !GetAtt AudioSentimentInferenceFunction.Arn
-
   VideoBucketName:
     Value: !Ref VideoS3Bucket
     Description: Amazon S3 bucket for storing video files with CORS enabled.
-
   AudioBucketName:
     Value: !Ref AudioS3Bucket
     Description: Amazon S3 bucket for storing audio files with CORS enabled.
