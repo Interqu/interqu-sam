@@ -10,7 +10,7 @@ s3 = boto3.client('s3')
 def lambda_handler(event, context):
 
 
-    file_name = event["audio"]["filename"]
+    file_name = event[0]["audio"]["filename"]
     if not file_name:
         return {
             "statusCode": 400,
@@ -21,7 +21,7 @@ def lambda_handler(event, context):
             ),
         }
     
-    audio_file=file_name+".wav"
+    audio_file=file_name
     output_file=file_name+".json"
 
     
@@ -58,7 +58,10 @@ def lambda_handler(event, context):
     if result['TranscriptionJob']['TranscriptionJobStatus'] == "COMPLETED":
         s3.download_file("interqu-audio", output_file, "/tmp/"+output_file)
         data = pd.read_json("/tmp/"+output_file)
-        return data['results']['transcripts'][0]['transcript']
+        return {
+            "statusCode": 200,
+            "body":data['results']['transcripts'][0]['transcript']
+        }
     else:
         return {
             "statusCode": 418,

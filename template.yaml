@@ -32,6 +32,9 @@ Resources:
         GetSentimentFunctionArn: !GetAtt AudioSentimentInferenceFunction.Arn
         GPTAnalysisFunctionArn: !GetAtt GPTAnalysisFunction.Arn
         PublishMongoFunctionArn : !GetAtt PublishMongoFunction.Arn
+        GetQuestionInfoFunctionArn : !GetAtt GetQuestionInfoFunction.Arn
+        AudioTranscriptionFunctionArn : !GetAtt AudioTranscriptionFunction.Arn
+
       Policies: # Find out more about SAM policy templates: https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-templates.html
         - LambdaInvokePolicy:
             FunctionName: !Ref SplitVideoFunction
@@ -43,6 +46,10 @@ Resources:
             FunctionName: !Ref GPTAnalysisFunction
         - LambdaInvokePolicy:
             FunctionName: !Ref PublishMongoFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref GetQuestionInfoFunction
+        - LambdaInvokePolicy:
+            FunctionName: !Ref AudioTranscriptionFunction
 
   AudioSentimentInferenceFunction:
     Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
@@ -169,7 +176,18 @@ Resources:
   #           Auth:
   #             ApiKeyRequired: true
 
-
+  GetQuestionInfoFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/get_question_info/
+      Handler: app.lambda_handler
+      Runtime: python3.9  
+      Architectures:
+        - x86_64
+      Environment:
+        Variables:
+          MONGODB_URL: '{{resolve:ssm:/interqu/mongodb_url_2:1}}'
+  
   PublishMongoFunction:
     Type: AWS::Serverless::Function
     Properties:

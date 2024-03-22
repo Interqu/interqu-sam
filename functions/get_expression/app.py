@@ -86,7 +86,7 @@ def lambda_handler(event, context):
 
     face_cascade = cv2.CascadeClassifier(face_model)
 
-    video = event["video"]["filename"]
+    video = event[0]["video"]["filename"]
 
     if not video:
         return {
