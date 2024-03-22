@@ -33,193 +33,142 @@
     "Pass (1)": {
       "Comment": "A Pass state passes its input to its output, without performing work. Pass states are useful when constructing and debugging state machines.",
       "Type": "Pass",
-      "Next": "Parallel"
+      "Next": "Parallel (1)"
     },
-    "Parallel": {
+    "Parallel (1)": {
       "Type": "Parallel",
+      "Next": "Pass (3)",
       "Branches": [
         {
-          "StartAt": "Get Expressions",
+          "StartAt": "Parallel",
           "States": {
-            "Get Expressions": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::lambda:invoke",
-              "OutputPath": "$.Payload",
-              "Parameters": {
-                "Payload.$": "$",
-                "FunctionName": "arn:aws:lambda:us-east-1:537801392411:function:interqu-ExpressionInferenceFunction-q9f153k2vL2F:$LATEST"
-              },
-              "Retry": [
+            "Parallel": {
+              "Type": "Parallel",
+              "Branches": [
                 {
-                  "ErrorEquals": [
-                    "Lambda.ServiceException",
-                    "Lambda.AWSLambdaException",
-                    "Lambda.SdkClientException",
-                    "Lambda.TooManyRequestsException"
-                  ],
-                  "IntervalSeconds": 2,
-                  "MaxAttempts": 6,
-                  "BackoffRate": 2
-                }
-              ],
-              "Next": "Choice (1)"
-            },
-            "Choice (1)": {
-              "Type": "Choice",
-              "Choices": [
-                {
-                  "Variable": "$.lambdaOutput.result",
-                  "StringEquals": "success",
-                  "Next": "ExpressionOutput"
+                  "StartAt": "Get Sentiment",
+                  "States": {
+                    "Get Sentiment": {
+                      "Type": "Task",
+                      "Resource": "arn:aws:states:::lambda:invoke",
+                      "OutputPath": "$.Payload",
+                      "Parameters": {
+                        "Payload.$": "$",
+                        "FunctionName": "${GetSentimentFunctionArn}"
+                      },
+                      "Retry": [
+                        {
+                          "ErrorEquals": [
+                            "Lambda.ServiceException",
+                            "Lambda.AWSLambdaException",
+                            "Lambda.SdkClientException",
+                            "Lambda.TooManyRequestsException"
+                          ],
+                          "IntervalSeconds": 2,
+                          "MaxAttempts": 6,
+                          "BackoffRate": 2
+                        }
+                      ],
+                      "Next": "Choice"
+                    },
+                    "Choice": {
+                      "Type": "Choice",
+                      "Choices": [
+                        {
+                          "Not": {
+                            "Variable": "$.statusCode",
+                            "NumericEquals": 200
+                          },
+                          "Next": "OnSentimentFail"
+                        },
+                        {
+                          "Variable": "$.statusCode",
+                          "NumericEquals": 200,
+                          "Next": "SentimentOutput"
+                        }
+                      ]
+                    },
+                    "SentimentOutput": {
+                      "Type": "Pass",
+                      "End": true
+                    },
+                    "OnSentimentFail": {
+                      "Type": "Task",
+                      "Resource": "arn:aws:states:::sns:publish",
+                      "Parameters": {
+                        "Message.$": "$",
+                        "TopicArn": "failure topic"
+                      },
+                      "Next": "Fail (1)"
+                    },
+                    "Fail (1)": {
+                      "Type": "Fail"
+                    }
+                  }
                 },
                 {
-                  "Not": {
-                    "Variable": "$.lambdaOutput.result",
-                    "StringEquals": "success"
-                  },
-                  "Next": "OnExpressionFail"
-                }
-              ]
-            },
-            "ExpressionOutput": {
-              "Type": "Pass",
-              "End": true
-            },
-            "OnExpressionFail": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::sns:publish",
-              "Parameters": {
-                "Message.$": "$",
-                "TopicArn": "Failure topic"
-              },
-              "Next": "Fail"
-            },
-            "Fail": {
-              "Type": "Fail"
-            }
-          }
-        },
-        {
-          "StartAt": "Get Sentiment",
-          "States": {
-            "Get Sentiment": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::lambda:invoke",
-              "OutputPath": "$.Payload",
-              "Parameters": {
-                "Payload.$": "$",
-                "FunctionName": "arn:aws:lambda:us-east-1:537801392411:function:interqu-AudioSentimentInferenceFunction-K1Ho4wxfDkX3:$LATEST"
-              },
-              "Retry": [
-                {
-                  "ErrorEquals": [
-                    "Lambda.ServiceException",
-                    "Lambda.AWSLambdaException",
-                    "Lambda.SdkClientException",
-                    "Lambda.TooManyRequestsException"
-                  ],
-                  "IntervalSeconds": 2,
-                  "MaxAttempts": 6,
-                  "BackoffRate": 2
-                }
-              ],
-              "Next": "Choice"
-            },
-            "Choice": {
-              "Type": "Choice",
-              "Choices": [
-                {
-                  "Not": {
-                    "Variable": "$.lambdaOutput.result",
-                    "StringEquals": "success"
-                  },
-                  "Next": "OnSentimentFail"
-                },
-                {
-                  "Variable": "$.lambdaOutput.result",
-                  "StringEquals": "success",
-                  "Next": "SentimentOutput"
-                }
-              ]
-            },
-            "SentimentOutput": {
-              "Type": "Pass",
-              "End": true
-            },
-            "OnSentimentFail": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::sns:publish",
-              "Parameters": {
-                "Message.$": "$",
-                "TopicArn": "failure topic"
-              },
-              "Next": "Fail (1)"
-            },
-            "Fail (1)": {
-              "Type": "Fail"
-            }
-          }
-        },
-        {
-          "StartAt": "Audio Transcription",
-          "States": {
-            "Audio Transcription": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::lambda:invoke",
-              "OutputPath": "$.Payload",
-              "Parameters": {
-                "Payload.$": "$",
-                "FunctionName": "arn:aws:lambda:us-east-1:537801392411:function:interqu-AudioTranscriptionFunction-G3FeVb4yTtWc:$LATEST"
-              },
-              "Retry": [
-                {
-                  "ErrorEquals": [
-                    "Lambda.ServiceException",
-                    "Lambda.AWSLambdaException",
-                    "Lambda.SdkClientException",
-                    "Lambda.TooManyRequestsException"
-                  ],
-                  "IntervalSeconds": 1,
-                  "MaxAttempts": 3,
-                  "BackoffRate": 2
+                  "StartAt": "Get Expressions",
+                  "States": {
+                    "Get Expressions": {
+                      "Type": "Task",
+                      "Resource": "arn:aws:states:::lambda:invoke",
+                      "OutputPath": "$.Payload",
+                      "Parameters": {
+                        "Payload.$": "$",
+                        "FunctionName": "${GetExpressionFunctionArn}"
+                      },
+                      "Retry": [
+                        {
+                          "ErrorEquals": [
+                            "Lambda.ServiceException",
+                            "Lambda.AWSLambdaException",
+                            "Lambda.SdkClientException",
+                            "Lambda.TooManyRequestsException"
+                          ],
+                          "IntervalSeconds": 2,
+                          "MaxAttempts": 6,
+                          "BackoffRate": 2
+                        }
+                      ],
+                      "Next": "Choice (1)"
+                    },
+                    "Choice (1)": {
+                      "Type": "Choice",
+                      "Choices": [
+                        {
+                          "Variable": "$.statusCode",
+                          "NumericEquals": 200,
+                          "Next": "ExpressionOutput"
+                        },
+                        {
+                          "Not": {
+                            "Variable": "$.statusCode",
+                            "NumericEquals": 200
+                          },
+                          "Next": "OnExpressionFail"
+                        }
+                      ]
+                    },
+                    "ExpressionOutput": {
+                      "Type": "Pass",
+                      "End": true
+                    },
+                    "OnExpressionFail": {
+                      "Type": "Task",
+                      "Resource": "arn:aws:states:::sns:publish",
+                      "Parameters": {
+                        "Message.$": "$",
+                        "TopicArn": "Failure topic"
+                      },
+                      "Next": "Fail"
+                    },
+                    "Fail": {
+                      "Type": "Fail"
+                    }
+                  }
                 }
               ],
-              "Next": "Choice (2)"
-            },
-            "Choice (2)": {
-              "Type": "Choice",
-              "Choices": [
-                {
-                  "Not": {
-                    "Variable": "$.lambdaOutput.result",
-                    "StringEquals": "success"
-                  },
-                  "Next": "Publish Failure (2)"
-                },
-                {
-                  "Not": {
-                    "Variable": "$.lambdaOutput.result",
-                    "StringEquals": "success"
-                  },
-                  "Next": "TranscriptionOutput"
-                }
-              ]
-            },
-            "TranscriptionOutput": {
-              "Type": "Pass",
               "End": true
-            },
-            "Publish Failure (2)": {
-              "Type": "Task",
-              "Resource": "arn:aws:states:::sns:publish",
-              "Parameters": {
-                "Message.$": "$",
-                "TopicArn": "failure topic"
-              },
-              "Next": "Fail (2)"
-            },
-            "Fail (2)": {
-              "Type": "Fail"
             }
           }
         },
@@ -232,8 +181,7 @@
             }
           }
         }
-      ],
-      "Next": "Pass (3)"
+      ]
     },
     "Pass (3)": {
       "Comment": "A Pass state passes its input to its output, without performing work. Pass states are useful when constructing and debugging state machines.",

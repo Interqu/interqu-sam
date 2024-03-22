@@ -57,7 +57,7 @@ class VGG(nn.Module):
 classes = ['Angry', 'Disgust', 'Fear', 'Happy', 'Sad', 'Surprise', 'Neutral']
 
 
-
+# s3_client.download_file("interqu-video", "pretrain.t7", "/opt/ml/pretrain.t7")
 
 model_file = '/opt/ml/pretrain.t7'
 face_model = '/opt/ml/haarcascade_frontalface_default.xml'
