@@ -24,25 +24,38 @@ audio_feedback_prompt = "You will act as a professional interview coach, named I
 # avoid_mention - five things you should not mention : string[]
 # visual_emotions - visual emotions from GetExpression() : string[]
 # audio_emotions - audio emotions from GetSentiment() : string[]
+
+
 # visual_score - visual score from GetExpression() : number
 # audio_score - audio score from GetSentiment() : number
 # transcript - transcript of the interview. : string
 def lambda_handler(event, context):
+    questionContent = event[0]["question_body"]
+    audioEmotions = event[1]["body"]
+    visualEmotions = event[2]["body"]
+    transcript = event[3]["body"]
     logging.info(f"gpt analysis triggered with event: {event}")
-    feedback = generate_feedback(event["question_id"], event["user_id"],
-                                event["position"], event["question"], event["tips"], event["employers_look_for"], event["avoid_mention"], event["visual_emotions"], event["audio_emotions"], event["visual_score"], event["audio_score"], event["transcript"])
+    feedback = generate_feedback(questionContent["question_id"], event[0]["user_id"],
+            questionContent["position"], questionContent["question"], questionContent["tips"], 
+            questionContent["employers_look_for"], questionContent["avoid_mentioning"], 
+            visualEmotions, audioEmotions, 
+            20, 20, transcript) # 2 placeholder scores
     return feedback
 
 # Returns obj to be stored in database
 def generate_feedback(question_id, user_id, position, question, tips, employers_look_for, avoid_mention, visual_emotions, audio_emotions, visual_score, audio_score, transcript):
+
     try:
         visual_feedback = generate_visual_feedback(
             position, question, visual_emotions)
+
         audio_feedback = generate_audio_feedback(
             position, question, audio_emotions)
+
         content_feedback = generate_content_feedback(
             position, question, tips, employers_look_for, avoid_mention, transcript)
-        return json.dumps({"status_code": 200,
+
+        return {"statusCode": 200,
                            "body": {"question_id": question_id,
                                     "user_id": user_id},
                            "analysis_result": {
@@ -56,16 +69,16 @@ def generate_feedback(question_id, user_id, position, question, tips, employers_
                                "content_analysis": content_feedback['feedback'],
                                "transcript": transcript
                            }
-                           })
+                           }
     except Exception as error:
         logging.error(f"GPT analysis error: {error}")
     return {
         "statusCode": 500,
-        "body": json.dumps(
+        "body": 
             {
                 "error": "an error has occured generating feedback",
             }
-        ),
+        
     }
 
 

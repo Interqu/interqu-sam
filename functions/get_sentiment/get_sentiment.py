@@ -204,7 +204,7 @@ def lambda_handler(event, context):
     print("Event received at get audio sentiment function: ")
     print(event)
 
-    audio_file = event["audio"]["filename"]
+    audio_file = event[0]["audio"]["filename"]
 
     # determine what audio file to fetch
     if not audio_file:
