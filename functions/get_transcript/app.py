@@ -10,7 +10,7 @@ s3 = boto3.client('s3')
 def lambda_handler(event, context):
 
 
-    file_name = event[0]["audio"]["filename"]
+    file_name = event[0]["audio"]["file_id"]
     if not file_name:
         return {
             "statusCode": 400,

@@ -192,8 +192,8 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: functions/publishDB/
-      Handler: MongoService.lambda_handler
-      Runtime: nodejs18.x
+      Handler: app.lambda_handler
+      Runtime: python3.9
       Architectures:
         - x86_64
       Environment:

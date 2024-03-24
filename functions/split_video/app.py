@@ -52,7 +52,7 @@ def lambda_handler(event, context):
     s3 = boto3.resource('s3')
     # bucket = event['bucket'].split(':')[-1]
     bucket = event['bucket']
-    filename = event['filename']
+    filename = event['file_id']
     directory = "/tmp/{}".format(filename)
 
     logging.info("Downloading file: " + filename)
@@ -71,10 +71,10 @@ def lambda_handler(event, context):
     return {
         "statusCode": 200,
         "video": {
-            "filename": filename[:-4] + ".mp4"
+            "file_id": filename[:-4] + ".mp4"
         },
         "audio": {
-            "filename": filename[:-4] + ".mp3"
+            "file_id": filename[:-4] + ".mp3"
         },
     }
 

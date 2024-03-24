@@ -4,9 +4,9 @@ import os
 import json
 
 mongourl = os.environ.get('MONGODB_URL')
-client = pymongo.MongoClient(mongourl)  # Change this connection string as per your MongoDB configuration
-db = client["interqu"]  # Replace "your_database_name" with your actual database name
-collection = db["interview_questions"]  # Replace "your_collection_name" with your actual collection name
+client = pymongo.MongoClient(mongourl) 
+db = client["interqu"]
+collection = db["interview_questions"] 
 
 
 def lambda_handler(event, context):
