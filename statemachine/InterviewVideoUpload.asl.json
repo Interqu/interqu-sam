@@ -53,11 +53,10 @@
     "Pass (1)": {
       "Comment": "A Pass state passes its input to its output, without performing work. Pass states are useful when constructing and debugging state machines.",
       "Type": "Pass",
-      "Next": "Parallel (1)"
+      "Next": "Parallel"
     },
-    "Parallel (1)": {
+    "Parallel": {
       "Type": "Parallel",
-      "Next": "Pass (3)",
       "Branches": [
         {
           "StartAt": "Get Question Info",
@@ -303,7 +302,8 @@
             }
           }
         }
-      ]
+      ],
+      "Next": "Pass (3)"
     },
     "Pass (3)": {
       "Comment": "A Pass state passes its input to its output, without performing work. Pass states are useful when constructing and debugging state machines.",
@@ -412,12 +412,39 @@
           "BackoffRate": 2
         }
       ],
-      "Next": "Wait"
+      "Next": "Choice (5)"
     },
-    "Wait": {
-      "Type": "Wait",
-      "Seconds": 2,
-      "End": true
+    "Choice (5)": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Not": {
+            "Variable": "$.statusCode",
+            "NumericEquals": 200
+          },
+          "Next": "OnPublishFail"
+        },
+        {
+          "Variable": "$.statusCode",
+          "NumericEquals": 200,
+          "Next": "Success"
+        }
+      ]
+    },
+    "OnPublishFail": {
+      "Type": "Task",
+      "Resource": "arn:aws:states:::sns:publish",
+      "Parameters": {
+        "Message.$": "$",
+        "TopicArn": "failure topic"
+      },
+      "Next": "Fail (5)"
+    },
+    "Fail (5)": {
+      "Type": "Fail"
+    },
+    "Success": {
+      "Type": "Succeed"
     }
   }
 }
