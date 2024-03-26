@@ -18,7 +18,8 @@ def lambda_handler(event, context):
         "question_id": event[0]["body"]["question_id"],
         "user_id": event[0]["body"]["user_id"],
         "timestamp": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
-        "analysis": event[0]["analysis_result"]
+        "analysis": event[0]["analysis_result"],
+        "_class": "com.interqu.interviews.Result"
     }
 
     try:

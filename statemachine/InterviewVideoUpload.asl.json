@@ -413,38 +413,38 @@
         }
       ],
       "Next": "Choice (5)"
-    },
-    "Choice (5)": {
-      "Type": "Choice",
-      "Choices": [
-        {
-          "Not": {
-            "Variable": "$.statusCode",
-            "NumericEquals": 200
-          },
-          "Next": "OnPublishFail"
-        },
-        {
-          "Variable": "$.statusCode",
-          "NumericEquals": 200,
-          "Next": "Success"
-        }
-      ]
-    },
-    "OnPublishFail": {
-      "Type": "Task",
-      "Resource": "arn:aws:states:::sns:publish",
-      "Parameters": {
-        "Message.$": "$",
-        "TopicArn": "failure topic"
       },
-      "Next": "Fail (5)"
-    },
-    "Fail (5)": {
-      "Type": "Fail"
-    },
-    "Success": {
-      "Type": "Succeed"
+      "Choice (5)": {
+        "Type": "Choice",
+        "Choices": [
+          {
+            "Not": {
+              "Variable": "$.statusCode",
+              "NumericEquals": 200
+            },
+            "Next": "OnPublishFail"
+          },
+          {
+            "Variable": "$.statusCode",
+            "NumericEquals": 200,
+            "Next": "Success"
+          }
+        ]
+      },
+      "OnPublishFail": {
+        "Type": "Task",
+        "Resource": "arn:aws:states:::sns:publish",
+        "Parameters": {
+          "Message.$": "$",
+          "TopicArn": "failure topic"
+        },
+        "Next": "Fail (5)"
+      },
+      "Fail (5)": {
+        "Type": "Fail"
+      },
+      "Success": {
+        "Type": "Succeed"
+      }
     }
   }
-}
