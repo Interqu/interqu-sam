@@ -247,50 +247,8 @@ Resources:
               - '*'
             ExposedHeaders:
               - Date
-            Id: myCORSRuleId1
+            Id: myCORSRuleId2
             MaxAge: 3600
-  AudioStorageBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref AudioS3Bucket
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Action:
-              - 's3:GetObject'
-              - 's3:PutObject'
-            Effect: Allow
-            Resource: !Join
-              - ''
-              - - 'arn:aws:s3:::'
-                - !Ref AudioS3Bucket
-                - /*
-            Principal: '*'
-            Condition:
-              StringLike:
-                'aws:Referer':
-                  - '*'
-  VideoStorageBucketPolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref VideoS3Bucket
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Action:
-              - 's3:GetObject'
-              - 's3:PutObject'
-            Effect: Allow
-            Resource: !Join
-              - ''
-              - - 'arn:aws:s3:::'
-                - !Ref VideoS3Bucket
-                - /*
-            Principal: '*'
-            Condition:
-              StringLike:
-                'aws:Referer':
-                  - '*'
 
 
 Outputs:
