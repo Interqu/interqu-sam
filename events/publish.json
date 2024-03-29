@@ -1,82 +1,82 @@
 [
+  {
+    "statusCode": 200,
+    "body": {
+      "question_id": "699c4844-7978-4560-94a7-5eef83334090",
+      "user_id": "c7b594ec-a363-4edb-8b22-e1f7fb8d8256"
+    },
+    "analysis_result": {
+      "video_emotion_array": "{\"output\": {\"Score\": 17.3, \"Timeline\": [\"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"ANGRY\", \"NEUTRAL\", \"ANGRY\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"ANGRY\", \"ANGRY\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"ANGRY\", \"ANGRY\", \"NEUTRAL\", \"ANGRY\", \"ANGRY\", \"ANGRY\", \"NEUTRAL\", \"ANGRY\", \"ANGRY\", \"ANGRY\", \"ANGRY\", \"ANGRY\", \"ANGRY\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"SAD\", \"NEUTRAL\", \"NEUTRAL\"]}}",
+      "audio_emotion_array": "{\"predictions\": [\"SAD\", \"DISGUST\", \"SAD\", \"DISGUST\", \"DISGUST\", \"HAPPY\", \"CALM\", \"DISGUST\", \"HAPPY\", \"FEAR\", \"HAPPY\", \"HAPPY\", \"DISGUST\", \"HAPPY\", \"SURPRISE\", \"SAD\", \"SAD\"]}",
+      "video_score": 20,
+      "audio_score": 20,
+      "video_feedback": "In this interview, you've exhibited a range of emotions, predominately neutral, which is often seen as a desirable state, reflecting calmness and composure. However, there are multiple instances where 'angry' emotions were detected. Expressing anger during an interview can convey a sense of frustration, negativity, or lack of control, which might not leave the best impression on the interviewer. Additionally, displaying 'sad' emotion, even briefly, might suggest feelings of disappointment or discouragement. It's important during interviews, especially for a Firmware Engineer position, where analytical thinking and problem-solving are key, to maintain a level of positivity and confidence. Interviews are not just about showcasing your technical expertise but also about demonstrating your ability to handle challenges with a positive attitude. While it's understandable that discussing complex and challenging projects can evoke a strong emotional response, it's beneficial to practice discussing these experiences in a way that highlights your problem-solving skills, resilience, and ability to stay positive and constructive. For future interviews, focus on maintaining a composed and positive demeanor. Think of challenging experiences as opportunities to showcase your strengths and growth. If you feel yourself getting emotionally charged, take a brief moment to pause, breathe, and refocus on the positive outcome or learning experience from the situation you're describing. This will not only help in managing your emotions but also in effectively communicating your competencies and value as a potential team member.",
+      "audio_feedback": "In this interview, your emotional range was quite varied, indicating a rollercoaster of feelings that might not align well with the professional demeanor expected in a firmware engineering interview. Initially, you expressed sadness and disgust four times, which could suggest discomfort or negative association with the project discussed. While these emotions can highlight challenges or areas for growth, it's important to frame them constructively. Interestingly, your emotions transitioned to happiness, calm, and then back to disgust, indicating a complex relationship with the project. The brief moments of fear and surprise towards the end, followed by returning to sadness, might confuse the interviewer about your overall sentiment towards your experiences and capabilities. Ideally, emotions like calm, confidence, enthusiasm, and a steady level of happiness are more aligned with discussing past projects positively. While it's important to express genuine challenges faced during projects, focusing on how these were overcome or what was learned can better demonstrate resilience and capability. For future interviews, try to maintain a more consistent, positive tone throughout your response. Highlighting successes without dwelling on negative aspects can be more encouraging to interviewers. Remember, the goal is to show how your experiences have prepared you for the role you're interviewing for, so keeping a more positive, composed, and confident demeanor could be more beneficial.",
+      "content_score": 5,
+      "content_analysis": "In this interview, you've provided an answer that seems to be misunderstood or completely unrelated to the question posed about describing a complex firmware project. The response appears to be a description of a symphony's structure rather than a firmware engineering project. This can create confusion and may lead interviewers to question your understanding of the question or your attention to detail. To improve your answer and align it with what employers are looking for, consider the following steps: Firstly, re-focus your answer on a specific firmware project you have worked on. Detail the project by discussing its scope, your role within the team, and the technologies you used, as this will showcase your technical depth. Secondly, highlight any significant challenges you encountered during the project and explain how you overcame them to demonstrate your problem-solving skills. Thirdly, emphasize how you collaborated with other team members or departments, reflecting your teamwork abilities. If applicable, mention any project management methodologies or tools you used, such as Agile or JIRA, to demonstrate organizational skills. Lastly, conclude with the project's outcome, emphasizing your contributions and the lessons learned. Reframing your response to encompass these elements will greatly improve your answer's relevance, showcase your skills and experiences more effectively, and align better with what employers are looking for in a firmware engineer candidate. Avoid discussing topics unrelated to the question, such as non-relevant projects or, in this case, an analogy to music that does not tie back to your specific experiences with firmware development.",
+      "transcript": "Dim douros, the devour of God's nonstop mix is a symphony. It has 12345 distinct movements. A symphony typically has three or four each of varying lengths and each of varying tempos. Usually the first piece in a symphony is slow and thought out. The second is a little bit more playful allegro, vivace. Allegri Bouncy moving third movement is usually a minuet trio or oftentimes called a Scherzo. And the fourth movement is usually a mass culmination of everything that we've heard before and a new identity that's usually faster, full of energy and enthusiasm. And if you look at this nonstop mix, all these different sections follow similar patterns. We start off with servants of the scourge, then we move into scourge of the universe, followed by servants of the scourge."
+    }
+  },
+  [
     {
       "statusCode": 200,
-      "body": {
+      "user_id": "c7b594ec-a363-4edb-8b22-e1f7fb8d8256",
+      "question_body": {
+        "_id": "65e4d6f44a1ebc7c527f6f57",
         "question_id": "699c4844-7978-4560-94a7-5eef83334090",
-        "user_id": "c7b594ec-a363-4edb-8b22-e1f7fb8d8256"
-      },
-      "analysis_result": {
-        "video_emotion_array": "{\"output\": {\"Score\": 17.3, \"Timeline\": [\"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Angry\", \"Neutral\", \"Angry\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Angry\", \"Angry\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Angry\", \"Angry\", \"Neutral\", \"Angry\", \"Angry\", \"Angry\", \"Neutral\", \"Angry\", \"Angry\", \"Angry\", \"Angry\", \"Angry\", \"Angry\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Sad\", \"Neutral\", \"Neutral\"]}}",
-        "audio_emotion_array": "{\"predictions\": [\"sad\", \"disgust\", \"sad\", \"disgust\", \"disgust\", \"happy\", \"calm\", \"disgust\", \"happy\", \"fear\", \"happy\", \"happy\", \"disgust\", \"happy\", \"surprise\", \"sad\", \"sad\"]}",
-        "video_score": 20,
-        "audio_score": 20,
-        "video_feedback": "In this interview, your facial expressions started mostly neutral, which is good as it shows that you are calm and composed while approaching the question. However, there's a noticeable shift to anger quite early into your response. This pattern of anger interspersed with neutral expressions, especially towards the middle of your answer, could give the impression that you might be frustrated or have had a negative experience related to the project you're discussing. Towards the end, there's a consistent stretch of angry expressions before returning to neutral and then a moment of sadness before concluding with neutrality. While it's understandable that complex projects can be challenging and at times frustrating, it's essential to manage how these emotions are conveyed during an interview. The anger and sadness could potentially suggest to the interviewer that you struggle with pressure or challenging situations, which might not be the case. For future interviews, it could be beneficial to focus on maintaining a more consistently positive or at least neutral demeanor throughout. This could be projecting confidence, engagement, and enthusiasm when discussing your work. Remember, the goal is to highlight your strengths and how you overcome challenges in a positive light. Practicing your response to similar questions, possibly in front of a mirror or recording yourself, can help you become more aware of your facial expressions and work on presenting a more balanced emotional state. It might also be helpful to reflect on positive aspects or learning experiences from challenging projects to naturally bring a more positive tone to your expressions when discussing your work.",
-        "audio_feedback": "In this interview, your response showcases a wide range of emotions from sad, disgust, happy, calm, fear, and surprise. It appears you started off feeling quite negative, with sadness and disgust, which may imply an initial lack of confidence or dissatisfaction with some aspects of the project. It's great to see the transition to happier and calmer tones as you possibly discussed successes or parts of the project you enjoyed or were proud of. However, the appearance of 'fear' mid-way could indicate a moment of uncertainty or anxiety, which is understandable but something to be managed. The final shift back to sadness suggests a reflective or perhaps regretful tone towards the end. In a professional setting, especially for a Firmware Engineer position, it's crucial to maintain a balance of emotions. While it's excellent to show passion and honesty about your experiences, leaning towards positive emotions like calm, confidence, and happiness more consistently can better demonstrate your resilience and capability. For future interviews, I recommend practicing your responses to focus on the aspects of your work that you find fulfilling and successful. Prepare and reflect on challenging aspects in a way that showcases your problem-solving skills and resilience, rather than dwelling on negative emotions. Try to maintain a steady, confident tone, especially when discussing accomplishments or lessons learned. This strategy will help you convey a more consistently positive and capable image to your interviewers.",
-        "content_score": 10,
-        "content_analysis": "In this interview, you've provided an answer that seems to be off topic for the question asked, which was about describing a complex firmware project, its development process, management, challenges, and outcomes. The response you've given, unfortunately, appears to detail the structure of a symphony rather than a firmware engineering project. This mismatch between the question and your answer will likely confuse interviewers, leading them to question your attention to detail and understanding of the position's requirements. To improve your response, it's crucial to focus directly on a relevant firmware project. Discuss the project's scope, your specific role, technologies used, and how you collaborated with your team. Highlight any significant challenges and how you overcame them, incorporating any project management methodologies or tools used, such as Agile or JIRA. Concluding with the project's outcomes, emphasizing your contributions and key learnings, will demonstrate both your technical depth and ability to adapt and learn from your experiences. Remember, specificity about your role and contributions, discussing teamwork and problem-solving, and avoiding generic or unrelated content are keys to a compelling answer. A structured and relevant response aligned with the provided tips and what employers look for will make your answer much more effective and stand out in your interview.",
-        "transcript": "Dim douros, the devour of God's nonstop mix is a symphony. It has 12345 distinct movements. A symphony typically has three or four each of varying lengths and each of varying tempos. Usually the first piece in a symphony is slow and thought out. The second is a little bit more playful allegro, vivace. Allegri Bouncy moving third movement is usually a minuet trio or oftentimes called a Scherzo. And the fourth movement is usually a mass culmination of everything that we've heard before and a new identity that's usually faster, full of energy and enthusiasm. And if you look at this nonstop mix, all these different sections follow similar patterns. We start off with servants of the scourge, then we move into scourge of the universe, followed by servants of the scourge."
+        "position": "Firmware Engineer",
+        "companies": [
+          "Intel",
+          "Qualcomm"
+        ],
+        "skills": [
+          "C/C++",
+          "Debugging",
+          "Collaboration",
+          "Time management"
+        ],
+        "rating": 5903,
+        "is_verified": true,
+        "tips": [
+          "Detail the project: Provide specifics about the project's scope, your role, and the technologies used.",
+          "Discuss challenges: Highlight any significant challenges you faced and how you overcame them.",
+          "Emphasize collaboration: Explain how you worked with other team members or departments.",
+          "Mention project management tools: If you used specific methodologies or tools (e.g., Agile, JIRA), mention these.",
+          "Outcome: Conclude with the project's outcome, emphasizing your contributions and what you learned."
+        ],
+        "employers_look_for": [
+          "Technical depth: Employers are interested in your technical skills and ability to handle complex firmware projects.",
+          "Problem-solving skills: Your approach to overcoming project challenges is crucial.",
+          "Teamwork: Your ability to collaborate with others indicates how well you'll fit into their team.",
+          "Project management: Experience with project management methodologies or tools shows organizational skills.",
+          "Learning and adaptability: Employers value engineers who learn from their experiences and adapt to new challenges."
+        ],
+        "avoid_mentioning": [
+          "Non-relevant projects: Focus on firmware-related projects instead of unrelated work.",
+          "Individual effort only: Avoid portraying the project as a solo effort if it was a team project.",
+          "Generic descriptions: Be specific about your role and contributions to the project.",
+          "Skipping the challenges: Discussing difficulties and how you overcame them shows your problem-solving skills.",
+          "Neglecting the outcome: Always include the results of your project to highlight its success or lessons learned."
+        ],
+        "average_overall_rating": 40.41,
+        "average_audio_rating": 43.41,
+        "average_video_rating": 29.28,
+        "average_context_rating": 48.55,
+        "_class": "com.interqu.interviews.questions.Question",
+        "question": "Can you describe a complex firmware project you worked on and how you managed the development process?"
       }
     },
-    [
-      {
-        "statusCode": 200,
-        "user_id": "c7b594ec-a363-4edb-8b22-e1f7fb8d8256",
-        "question_body": {
-          "_id": "65e4d6f44a1ebc7c527f6f57",
-          "question_id": "699c4844-7978-4560-94a7-5eef83334090",
-          "position": "Firmware Engineer",
-          "companies": [
-            "Intel",
-            "Qualcomm"
-          ],
-          "skills": [
-            "C/C++",
-            "Debugging",
-            "Collaboration",
-            "Time management"
-          ],
-          "rating": 5903,
-          "is_verified": true,
-          "tips": [
-            "Detail the project: Provide specifics about the project's scope, your role, and the technologies used.",
-            "Discuss challenges: Highlight any significant challenges you faced and how you overcame them.",
-            "Emphasize collaboration: Explain how you worked with other team members or departments.",
-            "Mention project management tools: If you used specific methodologies or tools (e.g., Agile, JIRA), mention these.",
-            "Outcome: Conclude with the project's outcome, emphasizing your contributions and what you learned."
-          ],
-          "employers_look_for": [
-            "Technical depth: Employers are interested in your technical skills and ability to handle complex firmware projects.",
-            "Problem-solving skills: Your approach to overcoming project challenges is crucial.",
-            "Teamwork: Your ability to collaborate with others indicates how well you'll fit into their team.",
-            "Project management: Experience with project management methodologies or tools shows organizational skills.",
-            "Learning and adaptability: Employers value engineers who learn from their experiences and adapt to new challenges."
-          ],
-          "avoid_mentioning": [
-            "Non-relevant projects: Focus on firmware-related projects instead of unrelated work.",
-            "Individual effort only: Avoid portraying the project as a solo effort if it was a team project.",
-            "Generic descriptions: Be specific about your role and contributions to the project.",
-            "Skipping the challenges: Discussing difficulties and how you overcame them shows your problem-solving skills.",
-            "Neglecting the outcome: Always include the results of your project to highlight its success or lessons learned."
-          ],
-          "average_overall_rating": 40.41,
-          "average_audio_rating": 43.41,
-          "average_video_rating": 29.28,
-          "average_context_rating": 48.55,
-          "_class": "com.interqu.interviews.questions.Question",
-          "question": "Can you describe a complex firmware project you worked on and how you managed the development process?"
-        }
-      },
-      {
-        "statusCode": 200,
-        "body": "{\"predictions\": [\"sad\", \"disgust\", \"sad\", \"disgust\", \"disgust\", \"happy\", \"calm\", \"disgust\", \"happy\", \"fear\", \"happy\", \"happy\", \"disgust\", \"happy\", \"surprise\", \"sad\", \"sad\"]}"
-      },
-      {
-        "statusCode": 200,
-        "body": "{\"output\": {\"Score\": 17.3, \"Timeline\": [\"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Angry\", \"Neutral\", \"Angry\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Angry\", \"Angry\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Angry\", \"Angry\", \"Neutral\", \"Angry\", \"Angry\", \"Angry\", \"Neutral\", \"Angry\", \"Angry\", \"Angry\", \"Angry\", \"Angry\", \"Angry\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Neutral\", \"Sad\", \"Neutral\", \"Neutral\"]}}"
-      },
-      {
-        "statusCode": 200,
-        "body": "Dim douros, the devour of God's nonstop mix is a symphony. It has 12345 distinct movements. A symphony typically has three or four each of varying lengths and each of varying tempos. Usually the first piece in a symphony is slow and thought out. The second is a little bit more playful allegro, vivace. Allegri Bouncy moving third movement is usually a minuet trio or oftentimes called a Scherzo. And the fourth movement is usually a mass culmination of everything that we've heard before and a new identity that's usually faster, full of energy and enthusiasm. And if you look at this nonstop mix, all these different sections follow similar patterns. We start off with servants of the scourge, then we move into scourge of the universe, followed by servants of the scourge."
-      }
-    ]
+    {
+      "statusCode": 200,
+      "body": "{\"predictions\": [\"SAD\", \"DISGUST\", \"SAD\", \"DISGUST\", \"DISGUST\", \"HAPPY\", \"CALM\", \"DISGUST\", \"HAPPY\", \"FEAR\", \"HAPPY\", \"HAPPY\", \"DISGUST\", \"HAPPY\", \"SURPRISE\", \"SAD\", \"SAD\"]}"
+    },
+    {
+      "statusCode": 200,
+      "body": "{\"output\": {\"Score\": 17.3, \"Timeline\": [\"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"ANGRY\", \"NEUTRAL\", \"ANGRY\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"ANGRY\", \"ANGRY\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"ANGRY\", \"ANGRY\", \"NEUTRAL\", \"ANGRY\", \"ANGRY\", \"ANGRY\", \"NEUTRAL\", \"ANGRY\", \"ANGRY\", \"ANGRY\", \"ANGRY\", \"ANGRY\", \"ANGRY\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"NEUTRAL\", \"SAD\", \"NEUTRAL\", \"NEUTRAL\"]}}"
+    },
+    {
+      "statusCode": 200,
+      "body": "Dim douros, the devour of God's nonstop mix is a symphony. It has 12345 distinct movements. A symphony typically has three or four each of varying lengths and each of varying tempos. Usually the first piece in a symphony is slow and thought out. The second is a little bit more playful allegro, vivace. Allegri Bouncy moving third movement is usually a minuet trio or oftentimes called a Scherzo. And the fourth movement is usually a mass culmination of everything that we've heard before and a new identity that's usually faster, full of energy and enthusiasm. And if you look at this nonstop mix, all these different sections follow similar patterns. We start off with servants of the scourge, then we move into scourge of the universe, followed by servants of the scourge."
+    }
   ]
+]
