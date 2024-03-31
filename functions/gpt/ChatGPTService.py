@@ -5,14 +5,14 @@ import logging
 
 # Initilizing openai with a given API_KEY.
 openai.api_key = os.environ.get('OPENAI_API_KEY')
-
 model = "gpt-4-turbo-preview"
 
 
 # System
 content_feedback_prompt = "You are a program named Interqu that analyzes interview answers. You will give feedback on an answer's structure, content and effectiveness and suggest improvements to stand out (give exmaples if possible). Use our professional guide as reference (tips, what employers look for, and what to avoid mentioning during the interview). Use personal pronouns in your response and ensure the lengths of your response is between 200 miniumwords to 500 words. Start your feedback with {{In this interview, you've...}}. Please format as a JSON: {{score:*score out of 100*, feedback:*feedback*}}"
-visual_feedback_prompt = "You will act as a professional interview coach, named Interqu, speak in a professional manner, and will ONLY anaylze the facial emotions of an interviewee. Do not mention anything about the content of the interview just emotion. In this query, you are provided an array of facial emotions detected by our system every second (i.e each element is the emotion detected within the second). Ensure you refer to the interviewee directly using pronouns like 'you', and ensure the lengths of your response is max of 400 words and minimun 200 words. Answer with the JSON format: 'feedback':'In this interview, you've....{what the array shows}...{what emotions should be displayed}...{helpful advice}...'"
-audio_feedback_prompt = "You will act as a professional interview coach, named Interqu, speak in a professional manner, and will ONLY anaylze the vocal emotions of an interviewee.  Do not mention anything about the content of the interview just emotion. In this query, you are provided an array of vocal emotions detected by our system every second (i.e each element is the emotion detected within the second). Ensure you refer to the interviewee directly using pronouns like 'you', and ensure the lengths of your response is max of 400 words and minimin 200 words. Answer with the JSON format: 'feedback': 'In this interview, you've....{what the array shows}...{what emotions should be displayed}...{helpful advice}...'"
+visual_feedback_prompt = "You will act as a professional interview coach, named Interqu, speak in a professional manner, and will ONLY anaylze the facial emotions of an interviewee. Do not mention anything about the content of the interview just emotion. In this query, you are provided an array of facial emotions detected by our system every second (i.e each element is the emotion detected within the second). Ensure you refer to the interviewee directly using pronouns like 'you', and ensure the lengths of your response is max of 400 words and minimum 200 words. Answer with the JSON format: 'feedback':'In this interview, you've....{what the array shows}...{what emotions should be displayed}...{helpful advice}...'"
+audio_feedback_prompt = "You will act as a professional interview coach, named Interqu, speak in a professional manner, and will ONLY anaylze the vocal emotions of an interviewee.  Do not mention anything about the content of the interview just emotion. In this query, you are provided an array of vocal emotions detected by our system every second (i.e each element is the emotion detected within the second). Ensure you refer to the interviewee directly using pronouns like 'you', and ensure the lengths of your response is max of 400 words and minimum 200 words. Answer with the JSON format: 'feedback': 'In this interview, you've....{what the array shows}...{what emotions should be displayed}...{helpful advice}...'"
+overall_feedback_prompt = "You will act as a professional interview coach, named Interqu, speak in a professional manner, and will anaylze the vocal emotions, facial emotions, and content of an interviewee. In this query, you are provided an array of vocal emotions, facial emotions, and content detected by our system every second (i.e each element is the emotion detected within the second). Ensure you refer to the interviewee directly using pronouns like 'you', and ensure the lengths of your response is max of 400 words and minimum 200 words. Answer with the JSON format: 'feedback': 'In this interview, you've....{what the array shows}...{what emotions should be displayed}...{helpful advice}...'"
 
 # Input:
 # question_id - question id of the interview : string
@@ -55,6 +55,8 @@ def generate_feedback(question_id, user_id, position, question, tips, employers_
         content_feedback = generate_content_feedback(
             position, question, tips, employers_look_for, avoid_mention, transcript)
 
+        overall_feedback = generate_overall_feedback(
+            position, question, tips, employers_look_for, avoid_mention, visual_emotions, audio_emotions, transcript)
         return {"statusCode": 200,
                            "body": {"question_id": question_id,
                                     "user_id": user_id},
@@ -65,6 +67,7 @@ def generate_feedback(question_id, user_id, position, question, tips, employers_
                                "audio_score": audio_score,
                                "video_feedback": visual_feedback['feedback'],
                                "audio_feedback": audio_feedback['feedback'],
+                               "overall_feedback": overall_feedback['feedback'],
                                "content_score": content_feedback['score'],
                                "content_analysis": content_feedback['feedback'],
                                "transcript": transcript
@@ -119,14 +122,31 @@ def generate_visual_feedback(position, question, processed_video_emotions):
         f"UNEXPECTED ERROR. Response Generation could not complete. Finish Reason: {finish_reason}")
 
 
-def generate_audio_feedback(position, question, processed_video_sentiment):
+def generate_audio_feedback(position, question, processed_audio_emotions):
     query = openai.ChatCompletion.create(
         model=model,
         response_format={"type":"json_object"},
         messages=[
             {"role": "system",
              "content": audio_feedback_prompt},
-            {"role": "user", "content": f"This is an interview for a {position} position. Question:'{question}'. Answer:'{processed_video_sentiment}'"}
+            {"role": "user", "content": f"This is an interview for a {position} position. Question:'{question}'. Answer:'{processed_audio_emotions}'"}
+        ]
+    )
+    # Validating answer
+    finish_reason = query['choices'][0]['finish_reason']
+    if finish_reason == 'stop':
+        return json.loads(query['choices'][0]['message']['content'])
+    raise Exception(
+        f"UNEXPECTED ERROR. Response Generation could not complete. Finish Reason: {finish_reason}")
+
+def generate_overall_feedback(position, question, tips, employers_look_for, avoid_mention, processed_video_emotions, processed_audio_emotions, answer):
+    query = openai.ChatCompletion.create(
+        model=model,
+        response_format={"type":"json_object"},
+        messages=[
+            {"role": "system",
+                "content": overall_feedback_prompt},
+            {"role": "user", "content": f"This is an interview for a {position} position. Question:'{question}'. Tips: '{tips}'. Employers Look For: '{employers_look_for}'. Avoid Mentioning: '{avoid_mention}'. Video Emotion:'{processed_video_emotions}. Audio Emotion:'{processed_audio_emotions}Answer:'{answer}'"}
         ]
     )
     # Validating answer
