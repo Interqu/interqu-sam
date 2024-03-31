@@ -157,6 +157,9 @@ Resources:
             Method: get
             Auth:
               ApiKeyRequired: true
+      Policies: 
+        - AmazonS3FullAccess
+        - AmazonTranscribeFullAccess
 
   # WhisperFunction:
   #   Type: AWS::Serverless::Function

@@ -301,6 +301,15 @@
               "Type": "Fail"
             }
           }
+        },
+        {
+          "StartAt": "InfoPipe (1)",
+          "States": {
+            "InfoPipe (1)": {
+              "Type": "Pass",
+              "End": true
+            }
+          }
         }
       ],
       "Next": "Pass (3)"

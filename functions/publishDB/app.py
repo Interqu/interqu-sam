@@ -15,7 +15,7 @@ def lambda_handler(event, context):
 
     analysis = {
         "overall":{
-            "overall": 10,
+            "overall_score": 10,
             "overall_summary": "Lorem Ipsum"
         },
         "video": {
@@ -39,6 +39,7 @@ def lambda_handler(event, context):
     payload = {
         "question_id": event[0]["body"]["question_id"],
         "user_id": event[0]["body"]["user_id"],
+        "file_id": event[1][4][1]["file_id"],
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "analysis": analysis,
         "_class": "com.interqu.interviews.Result"
