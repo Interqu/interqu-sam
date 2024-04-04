@@ -224,6 +224,52 @@ Resources:
       Architectures:
         - x86_64
 
+  # app sync for updates
+  GraphQLApi:
+    Type: AWS::AppSync::GraphQLApi
+    Properties:
+      Name: GraphQLApi
+      AuthenticationType: API_KEY # Or another authentication type as required
+
+  MyGraphQLSchema:
+    Type: AWS::AppSync::GraphQLSchema
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      Definition: |
+        schema {
+          query: Query
+        }
+        type Query {
+          getStatus: String
+        }
+
+  AppSyncDataSource:
+    Type: AWS::AppSync::DataSource
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      Name: MyLambdaDataSource
+      Type: AWS_LAMBDA
+      LambdaConfig:
+        LambdaFunctionArn: !GetAtt PushStateUpdates.Arn
+      ServiceRoleArn: !GetAtt AppSyncServiceRole.Arn
+
+  AppSyncResolver:
+    Type: AWS::AppSync::Resolver
+    Properties:
+      ApiId: !GetAtt GraphQLApi.ApiId
+      TypeName: Query
+      FieldName: getStatus
+      DataSourceName: !GetAtt AppSyncDataSource.Name
+      RequestMappingTemplate: |
+        {
+          "version": "2017-02-28",
+          "operation": "Invoke",
+          "payload": {
+            "arguments": $util.toJson($context.arguments)
+          }
+        }
+      ResponseMappingTemplate: "$util.toJson($context.result)"
+
 
   # Python layers
   FfmpegLayer:
