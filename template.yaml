@@ -225,6 +225,52 @@ Resources:
     # Metadata:
     #   BuildMethod: python3.9
 
+  # aws s3 buckets & configuration
+  VideoS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: interqu-video-test
+      PublicAccessBlockConfiguration:
+        BlockPublicPolicy: false
+        # RestrictPublicBuckets: false
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+              - DELETE
+            AllowedOrigins:
+              - '*'
+            ExposedHeaders:
+              - Date
+            Id: myCORSRuleId1
+            MaxAge: 3600
+  AudioS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: interqu-audio-test
+      PublicAccessBlockConfiguration:
+        BlockPublicPolicy: false
+        # RestrictPublicBuckets: false
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+              - DELETE
+            AllowedOrigins:
+              - '*'
+            ExposedHeaders:
+              - Date
+            Id: myCORSRuleId2
+            MaxAge: 3600
+
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
@@ -239,3 +285,9 @@ Outputs:
   InferenceFunctionIamRole:
     Description: "Implicit IAM Role created for Inference function"
     Value: !GetAtt AudioSentimentInferenceFunction.Arn
+  VideoBucketName:
+    Value: !Ref VideoS3Bucket
+    Description: Amazon S3 bucket for storing video files with CORS enabled.
+  AudioBucketName:
+    Value: !Ref AudioS3Bucket
+    Description: Amazon S3 bucket for storing audio files with CORS enabled.
