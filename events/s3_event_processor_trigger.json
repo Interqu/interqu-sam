@@ -1,0 +1,39 @@
+{
+    "Records": [
+      {
+        "eventVersion": "2.1",
+        "eventSource": "aws:s3",
+        "awsRegion": "us-east-1",
+        "eventTime": "2024-04-11T23:18:53.315Z",
+        "eventName": "ObjectCreated:Put",
+        "userIdentity": {
+          "principalId": "AGBB46O91M70S"
+        },
+        "requestParameters": {
+          "sourceIPAddress": "174.112.194.54"
+        },
+        "responseElements": {
+          "x-amz-request-id": "X4KB0D5R9ZH8Z7F5",
+          "x-amz-id-2": "2lKYgxF4oMiiWnJGq1NRT6yU9yFtmFLY/72SMVCy++8rENgN7sMwoq6D9X2NQBwZGGqJSYvP+gKjilEoAz6ARoQMH2E/wrtX"
+        },
+        "s3": {
+          "s3SchemaVersion": "1.0",
+          "configurationId": "MDA5MTUxMWUtOGVjMy00MTljLThmMjctMzQ4Y2JhOTIxODU2",
+          "bucket": {
+            "name": "interqu-video",
+            "ownerIdentity": {
+              "principalId": "AGBB46O91M70S"
+            },
+            "arn": "arn:aws:s3:::interqu-video"
+          },
+          "object": {
+            "key": "Biggest_Failure_(Bad)_Anthony.mp4",
+            "size": 12273507,
+            "eTag": "e1b5549a09c7be2a12bdb7071cd2d474",
+            "sequencer": "0066186FDCA6E2B6E5"
+          }
+        }
+      }
+    ]
+  }
+  

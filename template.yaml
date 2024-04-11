@@ -239,10 +239,10 @@ Resources:
             Bucket: !Ref VideoS3Bucket
             Events: s3:ObjectCreated:*
       Policies:
-        # - Statement:
-        #   - Effect: Allow
-        #     Action: ["s3:GetObject", "s3:HeadObject"]
-        #     Resource: !Sub "arn:aws:s3:::${VideoS3Bucket}/*"
+        - Statement:
+          - Effect: Allow
+            Action: ["s3:GetObject", "s3:HeadObject"]
+            Resource: "*"
         - Statement:
           - Effect: Allow
             Action: "states:StartExecution"
