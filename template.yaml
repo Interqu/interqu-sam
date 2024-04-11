@@ -296,7 +296,28 @@ Resources:
               - Date
             Id: myCORSRuleId2
             MaxAge: 3600
-
+  ResumeS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: interqu-resumes
+      PublicAccessBlockConfiguration:
+        BlockPublicPolicy: false
+        # RestrictPublicBuckets: false
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+              - DELETE
+            AllowedOrigins:
+              - '*'
+            ExposedHeaders:
+              - Date
+            Id: myCORSRuleId3
+            MaxAge: 3600
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
