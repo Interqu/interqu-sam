@@ -7,7 +7,7 @@ s3 = boto3.client('s3')
 sfn = boto3.client('stepfunctions')
 
 STATE_MACHINE_ARN = os.environ['STATEMACHINE_ARN']
-METADATA_FIELDS = ['user-id', 'question-id']
+METADATA_FIELDS = ['user-id', 'question-id', 'interview-id']
 # METADATA_PREFIX = 'x-amz-meta-'
 
 def lambda_handler(event, context):
