@@ -249,7 +249,7 @@ def lambda_handler(event, context):
         "statusCode": 200,
         "body": json.dumps(
             {
-                "predictions": [EMOTIONS[i] for i in predictions],
+                "predictions": [EMOTIONS[i].upper() for i in predictions],
             }
         ),
     }

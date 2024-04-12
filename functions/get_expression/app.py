@@ -145,7 +145,7 @@ def lambda_handler(event, context):
                     _, predicted = torch.max(outputs_avg.data, 0)
 
                 out[classes[int(predicted.cpu().numpy())]] +=1
-                timeline.append(classes[int(predicted.cpu().numpy())])
+                timeline.append(classes[int(predicted.cpu().numpy())].upper())
                 count += 1
         else: 
             count += 1
@@ -155,8 +155,6 @@ def lambda_handler(event, context):
 
     for item in out:
         total_score += scores[item] * out[item]
-
-
 
     return_obj = {"Score" : total_score, "Timeline": timeline}
 
