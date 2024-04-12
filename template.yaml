@@ -224,12 +224,38 @@ Resources:
         - python3.9
     # Metadata:
     #   BuildMethod: python3.9
+  
+  # trigger on upload
+  S3EventInvokeStateMachineFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/s3_event_processor/
+      Handler: event_processor.lambda_handler
+      Runtime: python3.9
+      Events:
+        S3UploadEvent:
+          Type: S3
+          Properties:
+            Bucket: !Ref VideoS3Bucket
+            Events: s3:ObjectCreated:*
+      Policies:
+        - Statement:
+          - Effect: Allow
+            Action: ["s3:GetObject", "s3:HeadObject"]
+            Resource: "*"
+        - Statement:
+          - Effect: Allow
+            Action: "states:StartExecution"
+            Resource: !GetAtt VideoUploadStatemachine.Arn
+      Environment:
+        Variables:
+          STATEMACHINE_ARN: !GetAtt VideoUploadStatemachine.Arn
 
   # aws s3 buckets & configuration
   VideoS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: interqu-video-test
+      BucketName: interqu-video
       PublicAccessBlockConfiguration:
         BlockPublicPolicy: false
         # RestrictPublicBuckets: false
@@ -251,7 +277,7 @@ Resources:
   AudioS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: interqu-audio-test
+      BucketName: interqu-audio
       PublicAccessBlockConfiguration:
         BlockPublicPolicy: false
         # RestrictPublicBuckets: false
@@ -270,7 +296,28 @@ Resources:
               - Date
             Id: myCORSRuleId2
             MaxAge: 3600
-
+  ResumeS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: interqu-resumes
+      PublicAccessBlockConfiguration:
+        BlockPublicPolicy: false
+        # RestrictPublicBuckets: false
+      CorsConfiguration:
+        CorsRules:
+          - AllowedHeaders:
+              - '*'
+            AllowedMethods:
+              - GET
+              - PUT
+              - POST
+              - DELETE
+            AllowedOrigins:
+              - '*'
+            ExposedHeaders:
+              - Date
+            Id: myCORSRuleId3
+            MaxAge: 3600
 
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
