@@ -7,6 +7,8 @@ s3 = boto3.client('s3')
 sfn = boto3.client('stepfunctions')
 
 STATE_MACHINE_ARN = os.environ['STATEMACHINE_ARN']
+METADATA_FIELDS = ['user-id', 'question-id']
+# METADATA_PREFIX = 'x-amz-meta-'
 
 def lambda_handler(event, context):
     # logging
@@ -26,14 +28,19 @@ def lambda_handler(event, context):
     try:
         # Retrieve metadata from the object
         response = s3.head_object(Bucket=bucket_name, Key=object_key)
-        user_id = response['Metadata'].get('user-id', 'Unknown')
-        question_id = response['Metadata'].get('question-id', 'Unknown')
-        input_data['user-id'] = user_id
-        input_data['question-id'] = question_id
-    except:
+        print(f'Object metadata recieved: {response["Metadata"]}')
+
+        for field in METADATA_FIELDS:
+            input_data[field] = response['Metadata'][field]
+            if not input_data[field]:
+                raise ValueError(f"Missing metadata {field}")
+
+    except Exception as e:
+        # for logging
+        print(f'could not fetch metadata, received error: {e}')
         return {
             'statusCode': 500,
-            'body': json.dumps('Error getting file metadata, cannot identify user-id')
+            'body': json.dumps(f'Error getting file metadata: {e}')
         }
 
     # Start execution of the state machine
@@ -43,6 +50,7 @@ def lambda_handler(event, context):
     )
 
     # Return the response
+    print(f"Statemachine successfully started for file: {object_key}")
     return {
         'statusCode': 200,
         'body': json.dumps('State Machine Execution Started Successfully')
