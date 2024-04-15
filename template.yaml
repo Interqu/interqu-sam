@@ -214,6 +214,35 @@ Resources:
           OPENAI_API_KEY: '{{resolve:ssm:/interqu/openai_api_key:1}}'
       Architectures:
         - x86_64
+  
+  DynamoMutatorFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      CodeUri: functions/dynamo_db_mutator/
+      Handler: mutator.lambda_handler
+      Runtime: python3.9
+      Architectures:
+        - x86_64
+      Policies:
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'states:DescribeExecution'
+                - 'states:ListExecutions'
+              Resource: !GetAtt VideoUploadStatemachine.Arn
+      Events:
+        StateMachineChange:
+          Type: CloudWatchEvent
+          Properties:
+            Pattern:
+              source:
+                - 'aws.states'
+              detail-type:
+                - 'Step Functions Execution Status Change'
+              detail:
+                stateMachineArn:
+                  - !Ref VideoUploadStatemachine
 
   # Python layers
   FfmpegLayer:
