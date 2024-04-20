@@ -1,0 +1,121 @@
+input CreateVideoProcessingInput {
+	Connection_id: String!
+	Interview_id: String!
+	Progress: String!
+}
+
+input DeleteVideoProcessingInput {
+	Connection_id: String!
+	Interview_id: String!
+}
+
+input ModelSizeInput {
+	ne: Int
+	eq: Int
+	le: Int
+	lt: Int
+	ge: Int
+	gt: Int
+	between: [Int]
+}
+
+input TableBooleanFilterInput {
+	ne: Boolean
+	eq: Boolean
+	attributeExists: Boolean
+}
+
+input TableFloatFilterInput {
+	ne: Float
+	eq: Float
+	le: Float
+	lt: Float
+	ge: Float
+	gt: Float
+	between: [Float]
+	attributeExists: Boolean
+}
+
+input TableIDFilterInput {
+	ne: ID
+	eq: ID
+	le: ID
+	lt: ID
+	ge: ID
+	gt: ID
+	contains: ID
+	notContains: ID
+	between: [ID]
+	beginsWith: ID
+	attributeExists: Boolean
+	size: ModelSizeInput
+}
+
+input TableIntFilterInput {
+	ne: Int
+	eq: Int
+	le: Int
+	lt: Int
+	ge: Int
+	gt: Int
+	between: [Int]
+	attributeExists: Boolean
+}
+
+input TableStringFilterInput {
+	ne: String
+	eq: String
+	le: String
+	lt: String
+	ge: String
+	gt: String
+	contains: String
+	notContains: String
+	between: [String]
+	beginsWith: String
+	attributeExists: Boolean
+	size: ModelSizeInput
+}
+
+input TableVideoProcessingFilterInput {
+	Connection_id: TableStringFilterInput
+	Interview_id: TableStringFilterInput
+	Progress: TableStringFilterInput
+}
+
+input UpdateVideoProcessingInput {
+	Connection_id: String!
+	Interview_id: String!
+	Progress: String
+}
+
+type VideoProcessing {
+	Connection_id: String!
+	Interview_id: String!
+	Progress: String!
+}
+
+type VideoProcessingConnection {
+	items: [VideoProcessing]
+	nextToken: String
+}
+
+type Mutation {
+	createVideoProcessing(input: CreateVideoProcessingInput!): VideoProcessing
+	updateVideoProcessing(input: UpdateVideoProcessingInput!): VideoProcessing
+	deleteVideoProcessing(input: DeleteVideoProcessingInput!): VideoProcessing
+}
+
+type Query {
+	getVideoProcessing(connection_id: String!, interview_id: String!): VideoProcessing
+	listVideoProcesses(filter: TableVideoProcessingFilterInput, limit: Int, nextToken: String): VideoProcessingConnection
+}
+
+type Subscription {
+	onCreateVideoProcessing(connection_id: String, interview_id: String, progress: String): VideoProcessing
+		@aws_subscribe(mutations: ["createVideoProcessing"])
+	onUpdateVideoProcessing(connection_id: String, interview_id: String, progress: String): VideoProcessing
+		@aws_subscribe(mutations: ["updateVideoProcessing"])
+	onDeleteVideoProcessing(connection_id: String, interview_id: String, progress: String): VideoProcessing
+		@aws_subscribe(mutations: ["deleteVideoProcessing"])
+}

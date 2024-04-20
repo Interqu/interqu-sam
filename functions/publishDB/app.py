@@ -16,7 +16,7 @@ def lambda_handler(event, context):
     analysis = {
         "overall":{
             "overall_score": 10,
-            "overall_summary": "Lorem Ipsum"
+            "overall_summary": results["overall_feedback"]
         },
         "video": {
             "video_score": results["video_score"],
@@ -40,6 +40,7 @@ def lambda_handler(event, context):
         "question_id": event[0]["body"]["question_id"],
         "user_id": event[0]["body"]["user_id"],
         "file_id": event[1][4][1]["file_id"],
+        "length": len(json.loads(results["video_emotion_array"])["output"]["Timeline"]) * 2,
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "analysis": analysis,
         "_class": "com.interqu.interviews.Result"
