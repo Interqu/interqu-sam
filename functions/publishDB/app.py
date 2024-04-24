@@ -40,14 +40,16 @@ def lambda_handler(event, context):
         "question_id": event[0]["body"]["question_id"],
         "user_id": event[0]["body"]["user_id"],
         "file_id": event[1][4][1]["file_id"],
-        "length": len(json.loads(results["video_emotion_array"])["output"]["Timeline"]) * 2,
+        "video_length": len(json.loads(results["video_emotion_array"])["output"]["Timeline"]) * 2,
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "analysis": analysis,
+        "interview_id": event[0]["body"]["interview_id"],
         "_class": "com.interqu.interviews.Result"
     }
 
     try:
-        collection.insert_one(payload)
+        query = {"interview_id": event[0]["body"]["interview_id"]} 
+        collection.replace_one(query, payload, upsert=True)
 
         return {
             'statusCode': 200
