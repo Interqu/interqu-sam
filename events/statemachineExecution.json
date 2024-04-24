@@ -2,5 +2,6 @@
   "bucket": "interqu-video",
   "file_id": "videoplayback.mp4",
   "user_id": "c7b594ec-a363-4edb-8b22-e1f7fb8d8256",
-  "question_id": "699c4844-7978-4560-94a7-5eef83334090"
+  "question_id": "699c4844-7978-4560-94a7-5eef83334090",
+  "interview_id": "testinterviewid"
 }

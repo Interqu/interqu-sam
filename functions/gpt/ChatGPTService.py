@@ -35,7 +35,7 @@ def lambda_handler(event, context):
     visualEmotions = event[2]["body"]
     transcript = event[3]["body"]
     logging.info(f"gpt analysis triggered with event: {event}")
-    feedback = generate_feedback(questionContent["question_id"], event[0]["user_id"],
+    feedback = generate_feedback(questionContent["question_id"], event[0]["user_id"], event[4][1]["interview_id"],
             questionContent["position"], questionContent["question"], questionContent["tips"], 
             questionContent["employers_look_for"], questionContent["avoid_mentioning"], 
             visualEmotions, audioEmotions, 
@@ -43,7 +43,7 @@ def lambda_handler(event, context):
     return feedback
 
 # Returns obj to be stored in database
-def generate_feedback(question_id, user_id, position, question, tips, employers_look_for, avoid_mention, visual_emotions, audio_emotions, visual_score, audio_score, transcript):
+def generate_feedback(question_id, user_id, interview_id, position, question, tips, employers_look_for, avoid_mention, visual_emotions, audio_emotions, visual_score, audio_score, transcript):
 
     try:
         visual_feedback = generate_visual_feedback(
@@ -59,7 +59,8 @@ def generate_feedback(question_id, user_id, position, question, tips, employers_
             position, question, tips, employers_look_for, avoid_mention, visual_emotions, audio_emotions, transcript)
         return {"statusCode": 200,
                            "body": {"question_id": question_id,
-                                    "user_id": user_id},
+                                    "user_id": user_id,
+                                    "interview_id": interview_id},
                            "analysis_result": {
                                "video_emotion_array": visual_emotions,
                                "audio_emotion_array": audio_emotions,
