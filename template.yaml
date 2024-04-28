@@ -231,6 +231,12 @@ Resources:
                 - 'states:DescribeExecution'
                 - 'states:ListExecutions'
               Resource: !GetAtt VideoUploadStatemachine.Arn
+        - Version: '2012-10-17'
+          Statement:
+            - Effect: Allow
+              Action:
+                - 'appsync:GraphQL'
+              Resource: !Sub 'arn:aws:appsync:${AWS::Region}:${AWS::AccountId}:apis/${InterquGraphQLAPI}/*'
       Events:
         StateMachineChange:
           Type: CloudWatchEvent
@@ -243,6 +249,9 @@ Resources:
               detail:
                 stateMachineArn:
                   - !Ref VideoUploadStatemachine
+      Environment:
+        Variables:
+            APPSYNC_URL: "https://${InterquGraphQLAPI}.appsync-api.${AWS::Region}.amazonaws.com/graphql"
 
   # Python layers
   FfmpegLayer:
@@ -352,6 +361,7 @@ Resources:
   DynamoDBPostsTable:
     Type: AWS::DynamoDB::Table
     DeletionPolicy: Retain
+    UpdateReplacePolicy: Retain
     Properties:
       TableName: InterquVideoProcessTable
       AttributeDefinitions:
