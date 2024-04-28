@@ -1,0 +1,33 @@
+mutation createVideoProcessing($input: CreateVideoProcessingInput!) {
+    createVideoProcessing(input: $input) {
+      Connection_id
+      Interview_id
+      Progress
+    }
+  }
+  
+mutation updateVideoProcessing($input: UpdateVideoProcessingInput!) {
+  updateVideoProcessing(input: $input) {
+    Connection_id
+    Interview_id
+    Progress
+  }
+}
+
+query listVideoProcessings {
+  listVideoProcessings {
+    items {
+      Connection_id
+      Interview_id
+      Progress
+    }
+  }
+}
+
+subscription OnUpdateVideoProcessing {
+  onUpdateVideoProcessing(connection_id: "test") {
+    Connection_id
+    Interview_id
+    Progress
+  }
+}

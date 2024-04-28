@@ -348,6 +348,93 @@ Resources:
             Id: myCORSRuleId3
             MaxAge: 3600
 
+
+  DynamoDBPostsTable:
+    Type: AWS::DynamoDB::Table
+    DeletionPolicy: Retain
+    Properties:
+      TableName: InterquVideoProcessTable
+      AttributeDefinitions:
+        - AttributeName: Connection_id
+          AttributeType: S
+        - AttributeName: Interview_id
+          AttributeType: S
+        # - AttributeName: Progress
+        #   AttributeType: S
+      KeySchema:
+        - AttributeName: Connection_id
+          KeyType: HASH
+        - AttributeName: Interview_id
+          KeyType: RANGE
+      ProvisionedThroughput:
+        ReadCapacityUnits: 3
+        WriteCapacityUnits: 3
+
+  InterquGraphQLAPI:
+    Type: AWS::Serverless::GraphQLApi
+    Properties:
+      SchemaUri: ./graphql/schema.graphql
+      Auth:
+        Type: AWS_IAM
+      DataSources:
+        DynamoDb:
+          PostsDataSource:
+            TableName: !Ref DynamoDBPostsTable
+            TableArn: !GetAtt DynamoDBPostsTable.Arn
+      Functions:
+        listVideoProcessesFunction:
+          Runtime:
+            Name: APPSYNC_JS
+            Version: "1.0.0"
+          DataSource: PostsDataSource
+          CodeUri: ./graphql/listVideoProcesses.js
+        createVideoProcessingFunction:
+          Runtime:
+            Name: APPSYNC_JS
+            Version: "1.0.0"
+          DataSource: PostsDataSource
+          CodeUri: ./graphql/createVideoProcessing.js
+        updateVideoProcessingFunction:
+          Runtime:
+            Name: APPSYNC_JS
+            Version: "1.0.0"
+          DataSource: PostsDataSource
+          CodeUri: ./graphql/updateVideoProcessing.js
+        deleteVideoProcessingFunction:
+          Runtime:
+            Name: APPSYNC_JS
+            Version: "1.0.0"
+          DataSource: PostsDataSource
+          CodeUri: ./graphql/deleteVideoProcessing.js
+      
+      Resolvers:
+        Mutation:
+          updateVideoProcessing:
+            Runtime:
+              Name: APPSYNC_JS
+              Version: "1.0.0"
+            Pipeline:
+              - updateVideoProcessingFunction
+          createVideoProcessing:
+            Runtime:
+              Name: APPSYNC_JS
+              Version: "1.0.0"
+            Pipeline:
+              - createVideoProcessingFunction
+          deleteVideoProcessing:
+            Runtime:
+              Name: APPSYNC_JS
+              Version: "1.0.0"
+            Pipeline:
+              - deleteVideoProcessingFunction
+        Query:
+          listVideoProcesses:
+              Runtime:
+                Name: APPSYNC_JS
+                Version: "1.0.0"
+              Pipeline:
+                - listVideoProcessesFunction
+
 Outputs:
   # ServerlessRestApi is an implicit API created out of Events key under Serverless::Function
   # Find out more about other implicit resources you can reference within SAM
@@ -367,3 +454,6 @@ Outputs:
   AudioBucketName:
     Value: !Ref AudioS3Bucket
     Description: Amazon S3 bucket for storing audio files with CORS enabled.
+  InterquGraphQLAPIEndpoint:
+    Description: "AppSync GraphQL API for Video Processing"
+    Value: !GetAtt InterquGraphQLAPI.GraphQLUrl
