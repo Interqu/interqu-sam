@@ -1,6 +1,7 @@
 import requests
 import json
 import os
+import boto3
 
 client = boto3.client("stepfunctions")
 
@@ -11,7 +12,8 @@ def lambda_handler(event, context):
     execution_arn = event["detail"]["executionArn"]
     inputs = json.loads(event['detail']['input'])
 
-    response = client.get_execution_history(executionArn=execution_arn)
+    response = client.get_execution_history(executionArn=execution_arn, reverseOrder=True)
+    print(f"execution event: {response}")
 
     # Assuming you want the latest event which should be the last in the list
     latest_event = response["events"][-1]

@@ -229,8 +229,9 @@ Resources:
             - Effect: Allow
               Action:
                 - 'states:DescribeExecution'
+                - 'states:GetExecutionHistory'
                 - 'states:ListExecutions'
-              Resource: !GetAtt VideoUploadStatemachine.Arn
+              Resource: '*'
         - Version: '2012-10-17'
           Statement:
             - Effect: Allow
@@ -251,7 +252,7 @@ Resources:
                   - !Ref VideoUploadStatemachine
       Environment:
         Variables:
-            APPSYNC_URL: "https://${InterquGraphQLAPI}.appsync-api.${AWS::Region}.amazonaws.com/graphql"
+            APPSYNC_URL: !Sub "https://${InterquGraphQLAPI}.appsync-api.${AWS::Region}.amazonaws.com/graphql"
 
   # Python layers
   FfmpegLayer:
