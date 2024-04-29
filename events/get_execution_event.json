@@ -1,0 +1,30 @@
+{
+    "executionArn": "-",
+    "stateMachineArn": "-",
+    "name": "-",
+    "status": "FAILED",
+    "startDate": "2024-04-28T23:56:17.028+00:00",
+    "stopDate": "2024-04-28T23:56:19.064+00:00",
+    "input": "{\"bucket\": \"interqu-video\", \"file_id\": \"c7b594ec-a363-4edb-8b22-e1f7fb8d8256-815aadd1-45af-4201-93bb-4103fbc0afa7-699c4844-7978-4560-94a7-5eef83334090-Sun-Apr-28-23-56-14-UTC-2024-interqu-interview.mp4\", \"user-id\": \"c7b594ec-a363-4edb-8b22-e1f7fb8d8256\", \"question-id\": \"699c4844-7978-4560-94a7-5eef83334090\", \"interview-id\": \"815aadd1-45af-4201-93bb-4103fbc0afa7\"}",
+    "inputDetails": {
+      "included": true
+    },
+    "traceHeader": "Root=1-662ee220-568c4f977ba81467017ff363;Parent=309188314e2e7c56;Sampled=0",
+    "error": "OSError",
+    "cause": "{\"errorMessage\":\"MoviePy error: failed to read the duration of file /tmp/c7b594ec-a363-4edb-8b22-e1f7fb8d8256-815aadd1-45af-4201-93bb-4103fbc0afa7-699c4844-7978-4560-94a7-5eef83334090-Sun-Apr-28-23-56-14-UTC-2024-interqu-interview.mp4.\\nHere are the file infos returned by ffmpeg:\\n\\nffmpeg version 4.2.2-static https://johnvansickle.com/ffmpeg/  Copyright (c) 2000-2019 the FFmpeg developers\\n  built with gcc 8 (Debian 8.3.0-6)\\n  configuration: --enable-gpl --enable-version3 --enable-static --disable-debug --disable-ffplay --disable-indev=sndio --disable-outdev=sndio --cc=gcc --enable-fontconfig --enable-frei0r --enable-gnutls --enable-gmp --enable-libgme --enable-gray --enable-libaom --enable-libfribidi --enable-libass --enable-libvmaf --enable-libfreetype --enable-libmp3lame --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopenjpeg --enable-librubberband --enable-libsoxr --enable-libspeex --enable-libsrt --enable-libvorbis --enable-libopus --enable-libtheora --enable-libvidstab --enable-libvo-amrwbenc --enable-libvpx --enable-libwebp --enable-libx264 --enable-libx265 --enable-libxml2 --enable-libdav1d --enable-libxvid --enable-libzvbi --enable-libzimg\\n  libavutil      56. 31.100 / 56. 31.100\\n  libavcodec     58. 54.100 / 58. 54.100\\n  libavformat    58. 29.100 / 58. 29.100\\n  libavdevice    58.  8.100 / 58.  8.100\\n  libavfilter     7. 57.100 /  7. 57.100\\n  libswscale      5.  5.100 /  5.  5.100\\n  libswresample   3.  5.100 /  3.  5.100\\n  libpostproc    55.  5.100 / 55.  5.100\\nInput #0, matroska,webm, from '/tmp/c7b594ec-a363-4edb-8b22-e1f7fb8d8256-815aadd1-45af-4201-93bb-4103fbc0afa7-699c4844-7978-4560-94a7-5eef83334090-Sun-Apr-28-23-56-14-UTC-2024-interqu-interview.mp4':\\n  Metadata:\\n    encoder         : Chrome\\n  Duration: N/A, start: 0.000000, bitrate: N/A\\n    Stream #0:0(eng): Audio: opus, 48000 Hz, mono, fltp (default)\\n    Stream #0:1(eng): Video: h264 (Constrained Baseline), yuv420p(progressive), 1920x1080, SAR 1:1 DAR 16:9, 30.30 fps, 60 tbr, 1k tbn, 60 tbc (default)\\nAt least one output file must be specified\\n\",\"errorType\":\"OSError\",\"requestId\":\"23c4167b-5c29-4bf0-9f55-a7d31bf42c79\",\"stackTrace\":[\"  File \\\\\\\"/var/task/app.py\\\\\\\", line 65, in lambda_handler\\n    uploadfile = extractAudio(directory)\\n\",\"  File \\\\\\\"/var/task/app.py\\\\\\\", line 16, in extractAudio\\n    clip = VideoFileClip(video_file)\\n\",\"  File \\\\\\\"/var/task/moviepy/video/io/VideoFileClip.py\\\\\\\", line 88, in __init__\\n    reader = FFMPEG_VideoReader(filename, pix_fmt=pix_fmt,\\n\",\"  File \\\\\\\"/var/task/moviepy/video/io/ffmpeg_reader.py\\\\\\\", line 35, in __init__\\n    infos = ffmpeg_parse_infos(filename, print_infos, check_duration,\\n\",\"  File \\\\\\\"/var/task/moviepy/video/io/ffmpeg_reader.py\\\\\\\", line 289, in ffmpeg_parse_infos\\n    raise IOError((\\\\\\\"MoviePy error: failed to read the duration of file %s.\\\\\\\\n\\\\\\\")]}",
+    "redriveCount": 0,
+    "redriveStatus": "REDRIVABLE",
+    "ResponseMetadata": {
+      "RequestId": "08a52a3e-92ab-4d6c-bb08-ea35dd14aeb4",
+      "HTTPStatusCode": 200,
+      "HTTPHeaders": {
+        "x-amzn-requestid": "08a52a3e-92ab-4d6c-bb08-ea35dd14aeb4",
+        "date": "Sun, 28 Apr 2024 23:56:20 GMT",
+        "content-type": "application/x-amz-json-1.0",
+        "content-length": "3964",
+        "connection": "keep-alive"
+      },
+      "RetryAttempts": 0
+    }
+  }
+  
