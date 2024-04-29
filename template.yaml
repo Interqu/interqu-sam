@@ -93,7 +93,8 @@ Resources:
             Method: get
             Auth:
               ApiKeyRequired: true
-      Policies: AmazonS3ReadOnlyAccess
+      Policies: AmazonS3FullAccess
+
     Metadata:
       Dockerfile: Dockerfile
       DockerContext: ./functions/get_expression

@@ -44,6 +44,7 @@ def lambda_handler(event, context):
         "timestamp": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         "analysis": analysis,
         "interview_id": event[0]["body"]["interview_id"],
+        "status": "DONE",
         "_class": "com.interqu.interviews.Result"
     }
 

@@ -100,10 +100,10 @@ def lambda_handler(event, context):
 
 
     s3_client.download_file("interqu-video", video, "/tmp/video.mp4")
-    
+    s3_client.upload_file("/tmp/video.mp4", "interqu-video", "testywesty.mp4")
     
     cap = cv2.VideoCapture("/tmp/video.mp4")
-    success, image = cap.read()
+    success, raw = cap.read()
     count = 0
     out = defaultdict(lambda:0, {})
     timeline = []
@@ -111,8 +111,9 @@ def lambda_handler(event, context):
 
     while success:
         success, raw = cap.read()
-        if count % 30 == 0:
-
+            # if success == False:
+            #     break
+        if count % 20 == 0:
             gray = rgb2gray(raw)
             gray = np.array(gray, dtype = "uint8")
             faces = face_cascade.detectMultiScale(gray, 1.1, 10)

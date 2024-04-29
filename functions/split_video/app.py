@@ -3,6 +3,8 @@ import os
 from moviepy.editor import VideoFileClip
 import logging
 from botocore.exceptions import ClientError
+import sys
+import subprocess
 
 client = boto3.client("lambda")
 
@@ -14,6 +16,7 @@ def extractAudio(video_file, output_ext="mp3"):
 
     filename, ext = os.path.splitext(video_file)
     clip = VideoFileClip(video_file)
+
     logging.info("writing file: " + filename)
     clip.audio.write_audiofile(f"{filename}.{output_ext}")
 
@@ -43,7 +46,7 @@ def upload_file(file_name, bucket, object_name=None):
     return True
 
 def lambda_handler(event, context):
-    print("Event received: ")
+    print("Event received at split video function: ")
     print(event)
 
     # event = event['Input']
@@ -53,11 +56,15 @@ def lambda_handler(event, context):
     # bucket = event['bucket'].split(':')[-1]
     bucket = event['bucket']
     filename = event['file_id']
+
     directory = "/tmp/{}".format(filename)
 
     logging.info("Downloading file: " + filename)
     s3.Bucket(bucket).download_file(filename, directory)
-
+    command = f'/opt/ffmpeg -y -i "{directory}" -c:v copy -crf 18 -metadata:s:v:0 rotate=90 -f mp4 "/tmp/temp_{filename}"'
+    os.system(command)
+    os.rename(f"/tmp/temp_{filename}", directory)
+    upload_file(directory, "interqu-video")
 
     # extract audio
     logging.info("Extracting audio")
@@ -66,6 +73,7 @@ def lambda_handler(event, context):
 
     # upload
     logging.info("Uploading audiofile")
+
     upload_file(uploadfile, "interqu-audio")
     
     return {

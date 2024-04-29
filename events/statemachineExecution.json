@@ -1,7 +1,8 @@
 {
   "bucket": "interqu-video",
-  "file_id": "videoplayback.mp4",
+  "file_id": "c7b594ec-a363-4edb-8b22-e1f7fb8d8256-906ca03d-0b04-466f-97c7-e366ed6bbbbb-67e42c7f-a646-4af8-aa8f-7d363a1b5816-Wed-Apr-24-20-17-17-UTC-2024-interqu-interview.mp4",
   "user_id": "c7b594ec-a363-4edb-8b22-e1f7fb8d8256",
-  "question_id": "699c4844-7978-4560-94a7-5eef83334090",
-  "interview_id": "testinterviewid"
+  "question_id": "67e42c7f-a646-4af8-aa8f-7d363a1b5816",
+  "interview_id": "906ca03d-0b04-466f-97c7-e366ed6bbbbb",
+  "duration": 10
 }
