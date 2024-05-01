@@ -2,10 +2,13 @@ import requests
 import json
 import os
 import boto3
+from requests_aws_sign import AWSV4Sign
 
 client = boto3.client("stepfunctions")
 
+
 def lambda_handler(event, context):
+
     print(f"dynamo mutator, event received: {event}")
 
     url = os.getenv("APPSYNC_URL", "")
@@ -21,7 +24,13 @@ def lambda_handler(event, context):
 
     print("Current State Name:", state_name)
 
-    query = """
+    session = boto3.session.Session()
+    credentials = session.get_credentials()
+
+    
+    auth=AWSV4Sign(credentials, "us-east-1", 'appsync')
+
+    mutation = """
     mutation updateVideoProcessing($input: UpdateVideoProcessingInput!) {
         updateVideoProcessing(input: $input) {
             Connection_id
@@ -30,15 +39,24 @@ def lambda_handler(event, context):
         }
     }
     """
+    input_data = {
+        "input": {
+            "Connection_id": inputs['user-id'],
+            "Interview_id": inputs['interview-id'],
+            "Progress": state_name
+        }
+    }
 
-    variables = {"Connection_id": inputs['user-id'], "Interview_id": inputs['interview-id'], "Progress": state_name}
-    headers = {"Content-Type": "application/json"}
+    headers = {
+        "Content-Type": "application/json"
+    }
 
     try:
         response = requests.post(
             url,
-            headers=headers,
-            json={"query": query, "variables": json.dumps(variables)},
+            auth=auth,
+            json={"query": mutation, "variables": json.dumps(input_data)},
+            headers=headers
         )
 
         print(f"Mutate success! Response: {response}")

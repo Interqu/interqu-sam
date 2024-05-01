@@ -252,7 +252,7 @@ Resources:
                   - !Ref VideoUploadStatemachine
       Environment:
         Variables:
-            APPSYNC_URL: !Sub "https://${InterquGraphQLAPI}.appsync-api.${AWS::Region}.amazonaws.com/graphql"
+            APPSYNC_URL: !GetAtt InterquGraphQLAPI.GraphQLUrl
 
   # Python layers
   FfmpegLayer:
